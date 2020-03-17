@@ -4,6 +4,7 @@ from .. import GameObject
 class CardTable(GameObject):
 
     MaxPlayers: int = 7 # "the usual 'full table'"
+    MinPlayers: int = 2
 
     def __init__(self, dealer_type: type):
         self._in_play: bool = False # Active gameplay indicator
@@ -12,6 +13,13 @@ class CardTable(GameObject):
         assert callable(self.__dealer_type) and isinstance(dealer_type, type)
         self.__players: List[CardPlayer] = [] # Players seated and in gameplay
         self.__waiting: List[CardPlayer] = [] # Players seated and waiting
+
+    @property
+    def active(self) -> bool:
+        """
+        Property getter: Boolean representing whether gameplay has begun.
+        """
+        return bool(self._in_play)
 
     @property
     def dealer(self):
@@ -45,12 +53,12 @@ class CardTable(GameObject):
         Try to seat a `CardPlayer` at this `CardTable`.
         """
         # Check for empty seats
-        if len(self.seated) == CardTable.MaxPlayers:
+        if len(self.seated) == self.MaxPlayers:
             self.log.warning('no seats available') # The CardTable is full.
             return
 
         # If gameplay has begun, seat the CardPlayer, but as "waiting".
-        if self._in_play:
+        if self.active:
             self.__waiting.append(player)
             player.waiting = True
         # If no game is in play, add the CardPlayer to the "player record".
@@ -87,10 +95,15 @@ class CardTable(GameObject):
             self.dealer.reset() # CardDealer empties the CardShoe.
 
     def play(self):
-        self._in_play = True  # 1. CardTable indicates gameplay has begun.
-        self.dealer.load()    # 3. CardDealer loads the CardShoe.
-        self.dealer.shuffle() # 4. CardDealer shuffles.
-        self.dealer.deal()    # 5. CardDealer deals.
+        if (len(self.players) >= self.MinPlayers) and not self.active:
+            self._in_play = True  # 1. CardTable indicates gameplay has begun.
+            self.dealer.load()    # 3. CardDealer loads the CardShoe.
+            self.dealer.shuffle() # 4. CardDealer shuffles.
+            self.dealer.deal()    # 5. CardDealer deals.
+        elif self.active:
+            self.log.error('gameplay already began')
+        else:
+            self.log.error('too few players to begin')
 
 
 __all__ = ['CardTable']

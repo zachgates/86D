@@ -56,7 +56,6 @@ class CardDealer(CardPlayer):
 
     def deal(self):
         self.log.warning('deal logic should be implemented in subclass')
-        raise NotImplementedError('no default deal logic')
 
     def __discard(self, card: PlayingCard = None, n_cards: int = 0):
         """
