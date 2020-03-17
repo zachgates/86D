@@ -71,7 +71,8 @@ class CardShoe(GameObject):
         try:
             return self._cards.pop() # Draw a PlayingCard.
         except IndexError:
-            return None # The CardShoe is empty.
+            self.log.warning('the CardShoe is empty')
+            return None
 
     def discard(self, card: PlayingCard) -> None:
         """

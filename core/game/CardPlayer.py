@@ -67,7 +67,7 @@ class CardPlayer(GameObject):
             # Try to access the indicated CardHand.
             return self.hands[hand_ord]
         except IndexError:
-            # No CardHand at index.
+            self.log.error('no CardHand at index: %i' % hand_ord)
             return None
 
     @property
