@@ -1,7 +1,7 @@
 import logging
 
-from src.core import CardPlayer
-from src.play.blackjack import BlackjackTable
+from .src.core import CardPlayer
+from .src.play.blackjack import BlackjackTable
 
 
 if __name__ == '__main__':
