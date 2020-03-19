@@ -16,8 +16,8 @@ class CardDeck(CardSet):
         reference to a CardDeck is assigned in post-init.
         """
         return [PlayingCard(rank, suit) \
-                for rank in PlayingCard.RANK_ORDS \
-                for suit in PlayingCard.SUIT_ORDS]
+                for rank in PlayingCard.RankRange \
+                for suit in PlayingCard.SuitRange]
 
     _cards: List[PlayingCard] = field(default_factory=deck_factory)
 

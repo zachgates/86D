@@ -1,5 +1,6 @@
 from dataclasses import *
 
+from ... import SUIT_ORDS, SUIT_NAMES, RANK_ORDS, RANK_NAMES
 from .. import GameObject
 
 
@@ -9,11 +10,11 @@ class PlayingCard(GameObject):
     A dataclass representing a single `PlayingCard` in a `CardDeck`.
     """
 
-    SUIT_ORDS = range(4)
-    SUIT_NAMES = ['spades', 'hearts', 'diamonds', 'clubs']
-    RANK_ORDS = range(13)
-    RANK_NAMES = ['ace', 'two', 'three', 'four', 'five', 'six', 'seven',
-                  'eight', 'nine', 'ten', 'jack', 'queen', 'king']
+    SuitRange = range(4)
+    SuitNames = ['spades', 'hearts', 'diamonds', 'clubs']
+    RankRange = range(13)
+    RankNames = ['ace', 'two', 'three', 'four', 'five', 'six', 'seven',
+                 'eight', 'nine', 'ten', 'jack', 'queen', 'king']
 
     rank: int # Indicates the PlayingCard's rank, range(13)
     suit: int # Indicates the PlayingCard's suit, range(4)
@@ -24,8 +25,8 @@ class PlayingCard(GameObject):
     def __str__(self):
         if self.up:
             return '<%s of %s>' % (
-                PlayingCard.RANK_NAMES[self.rank],
-                PlayingCard.SUIT_NAMES[self.suit])
+                self.RankNames[self.rank],
+                self.SuitNames[self.suit])
         else:
             return '<***>'
 

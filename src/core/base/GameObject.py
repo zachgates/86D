@@ -1,5 +1,7 @@
 import logging
 
+from ... import VERBOSE
+
 
 class __GameObject(type):
     """
@@ -17,8 +19,6 @@ class __GameObject(type):
 
 
 class GameObject(object, metaclass=__GameObject):
-
-    count = 0
 
     def __new__(cls, *args, **kwargs):
         """
@@ -40,11 +40,11 @@ class GameObject(object, metaclass=__GameObject):
     def __str__(self):
         return repr(self)
 
-    def _assert(self, cond, message, stack_info=False):
+    def _assert(self, cond, msg):
         try:
-            assert cond, message
+            assert cond, msg
         except AssertionError as e:
-            self.log.error(e, stack_info=stack_info)
+            self.log.error(e, stack_info=VERBOSE)
 
 
 __all__ = ['GameObject']
