@@ -1,6 +1,7 @@
 from typing import *
 
-from .. import GameObject, CardHand, CardTable
+from .. import GameObject, CardTable
+from . import CardHand
 
 
 class CardPlayer(GameObject):

@@ -1,7 +1,7 @@
 from typing import *
 
-from .. import PlayingCard, CardHand, CardShoe, CardTable
-from . import CardPlayer
+from .. import PlayingCard, CardShoe, CardTable
+from . import CardHand, CardPlayer
 
 
 class CardDealer(CardPlayer):

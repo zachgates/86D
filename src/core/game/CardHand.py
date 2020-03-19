@@ -1,8 +1,7 @@
 from dataclasses import *
 from typing import *
 
-from .. import GameObject
-from . import PlayingCard
+from .. import GameObject, PlayingCard
 
 
 @dataclass
