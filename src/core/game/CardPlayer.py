@@ -31,10 +31,9 @@ class CardPlayer(GameObject):
             self.log.error('CardPlayer already has a CardTable')
 
         # Ensure table is either a CardTable or no table.
-        if isinstance(table, CardTable) or (table is None):
-            self.__table = table
-        else:
-            self.log.warning('table must be of type CardTable subclass')
+        self._assert(isinstance(table, (CardTable, type(None))),
+                    'table must be CardTable or subclass, or None')
+        self.__table = table
 
     @property
     def hands(self):
@@ -48,13 +47,13 @@ class CardPlayer(GameObject):
         """
         Property setter: Sanitizes `CardHand`s assigned to the `CardPlayer`.
         """
-        # Ensure all hands are CardHands
-        if all(isinstance(hand, CardHand) for hand in hands):
-            for hand in hands:
-                hand.player = self
-                self.__hands.append(hand)
-        else:
-            self.log.warning('hands must be of type CardHand or subclass')
+        # Ensure all hands are CardHands.
+        self._assert(all(isinstance(hand, CardHand) for hand in hands),
+                    'all hands must be of type CardHand or subclass')
+        # Assign each CardHand to the CardPlayer.
+        for hand in hands:
+            hand.player = self
+            self.__hands.append(hand)
 
     def hand(self, hand_ord: int = 0):
         """
@@ -76,20 +75,6 @@ class CardPlayer(GameObject):
         Property getter: Points to all `PlayingCard`s the `CardPlayer` holds.
         """
         return tuple(card for hand in self.hands for card in hand.cards)
-
-    def win(self):
-        """
-        Logic for winning a game.
-        """
-        self.log.info('win')
-        ...
-
-    def lose(self):
-        """
-        Logic for losing a game.
-        """
-        self.log.info('lose')
-        ...
 
 
 __all__ = ['CardPlayer', 'CardHand']

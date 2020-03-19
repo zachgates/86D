@@ -166,5 +166,33 @@ class CardDealer(CardPlayer):
         hand.add(card)
         self.log.info('%r.add(%s)' % (hand, card))
 
+    def win(self, hand: CardHand, player: CardPlayer = None):
+        """
+        Contains the logic for winning a `hand`. If no `hand` is supplied, then
+        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
+        are assumed to have won.
+        """
+        if player is not None:
+            self._assert(isinstance(player, CardPlayer), 'player not CardPlayer')
+            for hand in player.hands:
+                self.win(hand)
+        else:
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer')
+            hand.player.log.info('winning hand: %s' % hand)
+
+    def lose(self, hand: CardHand, player: CardPlayer = None):
+        """
+        Contains the logic for losing a `hand`. If no `hand` is supplied, then
+        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
+        are assumed to have lost.
+        """
+        if player is not None:
+            self._assert(isinstance(player, CardPlayer), 'player not CardPlayer')
+            for hand in player.hands:
+                self.lose(hand)
+        else:
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer')
+            hand.player.log.info('losing hand: %s' % hand)
+
 
 __all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer', 'CardTable']

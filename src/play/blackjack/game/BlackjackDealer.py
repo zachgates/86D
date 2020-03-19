@@ -34,19 +34,19 @@ class BlackjackDealer(CardDealer):
             self.hand(0).up = True
             # Handle CardDealer blackjack.
             if self.hand(0).blackjack:
-                self.log.info('dealer has blackjack')
+                self.log.info('dealer has blackjack: %s' % self.hand(0))
                 for player in self.table.players[1:]: # Exclude CardDealer.
                     # Reveal CardPlayer's hand.
                     hand = player.hand(0)
                     hand.up = True
                     if hand.blackjack or hand.insured:
                         # CardPlayer receives bets if insured or blackjack.
-                        self.log.info('%s receives bets back' % player)
-                        player.win()
+                        self.log.debug('%s receives bets back' % player)
+                        self.win(hand)
                     else:
                         # Bets are collected otherwise.
-                        self.log.info('%s loses bets' % player)
-                        player.lose()
+                        self.log.debug('%s loses bets' % player)
+                        self.lose(hand)
 
 
 __all__ = ['BlackjackDealer']

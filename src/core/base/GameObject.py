@@ -40,5 +40,11 @@ class GameObject(object, metaclass=__GameObject):
     def __str__(self):
         return repr(self)
 
+    def _assert(self, cond, message, stack_info=False):
+        try:
+            assert cond, message
+        except AssertionError as e:
+            self.log.error(e, stack_info=stack_info)
+
 
 __all__ = ['GameObject']

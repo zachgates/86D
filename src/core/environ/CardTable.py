@@ -1,3 +1,5 @@
+from typing import *
+
 from .. import GameObject
 
 
@@ -8,11 +10,14 @@ class CardTable(GameObject):
 
     def __init__(self, dealer_type: type):
         self._in_play: bool = False # Active gameplay indicator
+        self.__players: List["CardPlayer"] = [] # Players seated and in gameplay
+        self.__waiting: List["CardPlayer"] = [] # Players seated and waiting
+
+        from .. import CardDealer # Avoid circular import
+        self._assert(issubclass(dealer_type, CardDealer),
+                    'dealer_type must be CardDealer or subclass')
         self._dealer: CardDealer = None
         self.__dealer_type = dealer_type # Supplied by superclass
-        assert callable(self.__dealer_type) and isinstance(dealer_type, type)
-        self.__players: List[CardPlayer] = [] # Players seated and in gameplay
-        self.__waiting: List[CardPlayer] = [] # Players seated and waiting
 
     @property
     def active(self) -> bool:

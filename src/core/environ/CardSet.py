@@ -13,6 +13,11 @@ class CardSet(GameObject):
 
     _cards: List[PlayingCard] = field(default_factory=list)
 
+    def __str__(self):
+        str_ = str(tuple(str(card) for card in self.cards))
+        str_ = str_.replace("'", '')
+        return str_
+
     @property
     def cards(self):
         """
@@ -48,7 +53,7 @@ class CardSet(GameObject):
         """
         Add a `PlayingCard` to the `CardHand`.
         """
-        assert isinstance(card, PlayingCard), 'supplied card not a PlayingCard'
+        self._assert(isinstance(card, PlayingCard), 'card not a PlayingCard')
         self._cards.append(card)
         card.hand = self # Reference this CardHand from the PlayingCard.
         self.log.debug('add->%r' % card)
@@ -60,8 +65,7 @@ class CardSet(GameObject):
         """
         if card:
             # Inspect the supplied card.
-            if card not in self.cards:
-                self.log.error('supplied card not in CardHand')
+            self._assert((card in self.cards), 'supplied card not in CardHand')
             # Discard the supplied PlayingCard from the CardHand.
             card.hand = None # Unassign a CardHand.
             self._cards.remove(card)
