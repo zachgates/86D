@@ -1,6 +1,5 @@
 from dataclasses import *
 
-from ... import SUIT_ORDS, SUIT_NAMES, RANK_ORDS, RANK_NAMES
 from .. import GameObject
 
 
