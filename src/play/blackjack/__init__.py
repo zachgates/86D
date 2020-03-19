@@ -1,5 +1,5 @@
-from .environ import BlackjackHand
 from .environ import BlackjackTable
+from .game import BlackjackHand
 from .game import BlackjackDealer
 
 
