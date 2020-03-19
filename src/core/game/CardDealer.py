@@ -26,12 +26,6 @@ class CardDealer(CardPlayer):
         """
         return tuple(self.__shoe.cards)
         
-    def _play(self):
-        """
-        Run a single frame of gameplay. Override in subclass.
-        """
-        pass
-        
     def play(self):
         """
         `CardDealer` loads the `CardShoe`, shuffles, and deals. Additional gameplay logic
@@ -40,9 +34,6 @@ class CardDealer(CardPlayer):
         self.load()
         self.shuffle()
         self.deal()
-        # Maintain gameplay
-        while self.table.active:
-            self._play()
 
     def load(self, n_decks: int = 1):
         """
