@@ -7,6 +7,10 @@ class BlackjackDealer(CardDealer):
     def load(self):
         # Load the CardShoe with N-1 decks where N is the number of CardPlayers
         super().load(len(self.table.players) - 1)
+        
+    def _play(self):
+        self.insurance()
+        self.table._in_play = False # TEMP: break from gameplay loop
 
     def deal(self):
         # Initialize CardHands

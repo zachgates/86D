@@ -43,6 +43,9 @@ class PlayingCard(GameObject):
         return min(self.rank + 1, 10)
 
     def discard(self):
+        """
+        Reveal the `PlayingCard` and discard it.
+        """
         # Reveal the PlayingCard.
         self.up = True
         # Unassign any CardHand.

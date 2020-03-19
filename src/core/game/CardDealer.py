@@ -25,6 +25,24 @@ class CardDealer(CardPlayer):
         Property pointing to `PlayingCard`s in the `CardDealer`'s `CardShoe`.
         """
         return tuple(self.__shoe.cards)
+        
+    def _play(self):
+        """
+        Run a single frame of gameplay. Override in subclass.
+        """
+        pass
+        
+    def play(self):
+        """
+        `CardDealer` loads the `CardShoe`, shuffles, and deals. Additional gameplay logic
+        should be defined in the `_play` method.
+        """
+        self.load()
+        self.shuffle()
+        self.deal()
+        # Maintain gameplay
+        while self.table.active:
+            self._play()
 
     def load(self, n_decks: int = 1):
         """
@@ -119,7 +137,7 @@ class CardDealer(CardPlayer):
         """
         # Discard CardHands handed to the CardDealer.
         for hand in hands:
-            self.log.info('discarding %s CardHand' % hand.player)
+            self.log.debug('discarding %s CardHand' % hand.player)
             self.discard(cards=hand.cards)
         # Discard PlayingCards handed to the CardDealer.
         for card in cards:
@@ -140,7 +158,7 @@ class CardDealer(CardPlayer):
         self.discard(cards=tuple(self.__drawn), n_cards=-1)
         # Reset the "drawn record".
         self.__drawn = []
-        self.log.info('discarded (%i) PlayingCards from CardShoe.' % n_cards)
+        self.log.debug('discarded (%i) PlayingCards from CardShoe.' % n_cards)
 
     def hit(self, player: CardPlayer, hand_ord: int = 0, reveal: bool = False):
         """

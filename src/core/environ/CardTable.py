@@ -87,23 +87,33 @@ class CardTable(GameObject):
             player.table = None
         else:
             # CardPlayer supplied is not assigned this CardTable.
-            self.log.error('CardPlayer is not even seated')
+            self.log.critical('CardPlayer is not even seated')
 
         # Check if any CardPlayers are seated, aside from the CardDealer.
         if set(self.players) == {self.dealer}:
             self._in_play = False # CardTable indicates gameplay has ended.
             self.dealer.reset() # CardDealer empties the CardShoe.
+            
+    def _play(self):
+        """
+        Run a single frame of gameplay. Override in subclass.
+        """
+        pass
 
     def play(self):
-        if (len(self.players) >= self.MinPlayers) and not self.active:
-            self._in_play = True  # 1. CardTable indicates gameplay has begun.
-            self.dealer.load()    # 3. CardDealer loads the CardShoe.
-            self.dealer.shuffle() # 4. CardDealer shuffles.
-            self.dealer.deal()    # 5. CardDealer deals.
-        elif self.active:
-            self.log.error('gameplay already began')
+        """
+        Indicate and begin gameplay with seated `CardPlayer`s.
+        """
+        # Sanity check
+        if self.active:
+            self.log.critical('game is already in play')
+
+        # Ensure enough players are seated.
+        if (len(self.players) >= self.MinPlayers):
+            self._in_play = True  # Indicate CardTable is active.
+            self.dealer.play()
         else:
-            self.log.error('too few players to begin')
+            self.log.warning('too few players to begin')
 
 
 __all__ = ['CardTable']
