@@ -43,9 +43,11 @@ class BlackjackDealer(CardDealer):
                     if hand.blackjack or hand.insured:
                         # CardPlayer receives bets if insured or blackjack.
                         self.log.info('%s receives bets back' % player)
+                        player.win()
                     else:
                         # Bets are collected otherwise.
                         self.log.info('%s loses bets' % player)
+                        player.lose()
 
 
 __all__ = ['BlackjackDealer']

@@ -25,15 +25,16 @@ class CardDealer(CardPlayer):
         Property pointing to `PlayingCard`s in the `CardDealer`'s `CardShoe`.
         """
         return tuple(self.__shoe.cards)
-        
+
     def play(self):
         """
-        `CardDealer` loads the `CardShoe`, shuffles, and deals. Additional gameplay logic
-        should be defined in the `_play` method.
+        `CardDealer` loads the `CardShoe`, shuffles, and deals. Additional
+        gameplay logic should be defined in the `_play` method.
         """
         self.load()
         self.shuffle()
         self.deal()
+        ...
 
     def load(self, n_decks: int = 1):
         """
@@ -65,6 +66,7 @@ class CardDealer(CardPlayer):
 
     def deal(self):
         self.log.warning('deal logic should be implemented in subclass')
+        ...
 
     def __discard(self, card: PlayingCard = None, n_cards: int = 0):
         """

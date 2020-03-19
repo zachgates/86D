@@ -93,12 +93,6 @@ class CardTable(GameObject):
         if set(self.players) == {self.dealer}:
             self._in_play = False # CardTable indicates gameplay has ended.
             self.dealer.reset() # CardDealer empties the CardShoe.
-            
-    def _play(self):
-        """
-        Run a single frame of gameplay. Override in subclass.
-        """
-        pass
 
     def play(self):
         """

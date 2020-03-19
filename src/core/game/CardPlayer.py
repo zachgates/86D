@@ -1,3 +1,5 @@
+from typing import *
+
 from .. import GameObject, CardHand, CardTable
 
 
@@ -76,6 +78,20 @@ class CardPlayer(GameObject):
         Property getter: Points to all `PlayingCard`s the `CardPlayer` holds.
         """
         return tuple(card for hand in self.hands for card in hand.cards)
+
+    def win(self):
+        """
+        Logic for winning a game.
+        """
+        self.log.info('win')
+        ...
+
+    def lose(self):
+        """
+        Logic for losing a game.
+        """
+        self.log.info('lose')
+        ...
 
 
 __all__ = ['CardPlayer', 'CardHand']
