@@ -5,4 +5,4 @@ from .CardShoe import CardShoe
 from .CardTable import CardTable
 
 
-__all__ = ['PlayingCard', 'CardDeck', 'CardShoe', 'CardTable']
+__all__ = ['PlayingCard', 'CardSet', 'CardDeck', 'CardShoe', 'CardTable']
