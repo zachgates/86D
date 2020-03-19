@@ -23,7 +23,7 @@ class CardHand(CardSet):
         # Generate N CardHands.
         if n_hands == 1:
             cls.log.debug('generating an empty CardHand for %s' % player)
-            hand = CardHand()
+            hand = cls()
             hand.player = player
             return [hand]
         elif n_hands > 1:
