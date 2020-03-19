@@ -2,6 +2,7 @@ from dataclasses import *
 from typing import *
 
 from .. import GameObject, PlayingCard
+from . import CasinoToken
 
 
 @dataclass
@@ -11,6 +12,7 @@ class CardHand(GameObject):
     """
 
     player: "CardPlayer" # The CardPlayer the CardHand is assigned to
+    bet: List[CasinoToken] = field(default_factory=list)
     _cards: List[PlayingCard] = field(default_factory=list) # All PlayingCards
 
     @classmethod
