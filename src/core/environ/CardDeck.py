@@ -1,12 +1,11 @@
 from dataclasses import *
 from typing import *
 
-from .. import GameObject
-from . import PlayingCard
+from . import PlayingCard, CardSet
 
 
 @dataclass
-class CardDeck(GameObject):
+class CardDeck(CardSet):
     """
     A dataclass representing an entire `CardDeck` of `PlayingCard`s.
     """
@@ -20,7 +19,7 @@ class CardDeck(GameObject):
                 for rank in PlayingCard.RANK_ORDS \
                 for suit in PlayingCard.SUIT_ORDS]
 
-    cards: List[PlayingCard] = field(default_factory=deck_factory)
+    _cards: List[PlayingCard] = field(default_factory=deck_factory)
 
     def __post_init__(self):
         """
@@ -29,14 +28,6 @@ class CardDeck(GameObject):
         for card in self.cards:
             card.deck = self
         self.log.debug('generated (52) cards')
-
-    @property
-    def empty(self):
-        """
-        Property getter: Points to whether the `CardDeck` contains any
-        `PlayingCard`s.
-        """
-        return len(self.cards) == 0
 
 
 __all__ = ['CardDeck', 'PlayingCard']

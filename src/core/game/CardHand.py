@@ -1,17 +1,17 @@
 from dataclasses import *
 from typing import *
 
-from .. import GameObject, PlayingCard
+from .. import GameObject, PlayingCard, CardSet
 from . import CasinoToken
 
 
 @dataclass
-class CardHand(GameObject):
+class CardHand(CardSet):
     """
     A dataclass representing a single `CardHand` of `PlayingCard`s.
     """
 
-    player: "CardPlayer" # The CardPlayer the CardHand is assigned to
+    player: "CardPlayer" = None # The CardPlayer the CardHand is assigned to
     bet: List[CasinoToken] = field(default_factory=list)
     _cards: List[PlayingCard] = field(default_factory=list) # All PlayingCards
 
@@ -23,36 +23,15 @@ class CardHand(GameObject):
         # Generate N CardHands.
         if n_hands == 1:
             cls.log.debug('generating an empty CardHand for %s' % player)
-            return (cls(player),)
+            hand = CardHand()
+            hand.player = player
+            return [hand]
         elif n_hands > 1:
             cls.log.debug('generating %i empty CardHands for %s' \
                           % (n_hands, player))
-            return tuple(cls(player) for _ in range(n_hands))
+            return [cls.gen(player) for _ in range(n_hands)]
         else:
             cls.log.error("can't generate no hands") # N = 0
-
-    @property
-    def cards(self) -> tuple:
-        """
-        Property getter: Points to the `PlayingCard`s in the `CardHand`.
-        """
-        return tuple(self._cards)
-
-    @property
-    def up(self) -> bool:
-        """
-        Property getter: Points to whether all `PlayingCard`s are face-up.
-        """
-        return all(card.up for card in self.cards)
-
-    @up.setter
-    def up(self, reveal: bool):
-        """
-        Property setter: Apply `PlayingCard` orientation changes.
-        """
-        for card in self.cards:
-            card.up = bool(reveal)
-        self.log.debug('turned face-up')
 
     def hit(self, card: PlayingCard) -> None:
         """

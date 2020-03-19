@@ -1,5 +1,6 @@
 from .base import GameObject
 from .environ import PlayingCard
+from .environ import CardSet
 from .environ import CardDeck
 from .environ import CardShoe
 from .environ import CardTable

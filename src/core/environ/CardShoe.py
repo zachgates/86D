@@ -1,58 +1,49 @@
 import random
 
+from dataclasses import *
 from typing import *
 
 from .. import GameObject
-from . import PlayingCard, CardDeck
+from . import PlayingCard, CardSet, CardDeck
 
 
-class CardShoe(GameObject):
+@dataclass
+class CardShoe(CardSet):
     """
     A device used to hold multiple decks of cards typically 4, 6 or 8.
     Cards are dealt one at a time from the shoe.
     """
 
-    def __init__(self):
-        super().__init__()
-        self._decks: List[CardDeck] = [] # The CardDecks in the CardShoe
-        self._cards: List[PlayingCard] = [] # The PlayingCards in the CardShoe
-        self.__discard: List[PlayingCard] = [] # All discarded PlayingCards
+    _discards: List[PlayingCard] = field(default_factory=list)
 
     @property
-    def cards(self) -> tuple:
+    def decks(self):
         """
-        Property getter: Points to all of the `PlayingCard`s in the `CardShoe`.
+        Property getter: Returns a tuple of the `CardDeck`s in the `CardShoe`.
         """
-        return tuple(self._cards)
+        return tuple(set(card.deck for card in self.cards))
 
     @property
     def discards(self) -> tuple:
         """
         Property getter: Points to all discarded `PlayingCard`s.
         """
-        return tuple(self.__discard)
-
-    def _reload(self) -> None:
-        """
-        Move any discarded `PlayingCard`s back into the CardShoe.
-        """
-        self._cards.extend(self.__discard)
-        self.__discard = []
-        self.log.info('reloaded')
+        return tuple(self._discards)
 
     def load(self, n_decks: int = 0) -> None:
         """
         Load the `CardShoe` with any number, N, `CardDeck`s.
         """
-        # Check to see if existing CardDecks can be re-used.
-        if n_decks == len(self._decks):
-            self._reload()
-            return
-        # Create new CardDecks, as needed.
         for _ in range(n_decks):
-            deck = CardDeck() # Create a CardDeck.
-            self._decks.append(deck) # Reference the CardDeck.
-            self._cards += deck.cards # Add the PlayingCards to the CardShoe.
+            self._cards += CardDeck().cards
+
+    def reload(self) -> None:
+        """
+        Move any discarded `PlayingCard`s back into the CardShoe.
+        """
+        self._cards.extend(self._discards)
+        self._discards = []
+        self.log.info('reloaded')
 
     def shuffle(self, n_repeat: int = 1) -> None:
         """
@@ -68,17 +59,16 @@ class CardShoe(GameObject):
         """
         Draw any number, N, `PlayingCard`s from the `CardShoe`.
         """
-        try:
-            return self._cards.pop() # Draw a PlayingCard.
-        except IndexError:
+        if self.empty:
             self.log.warning('the CardShoe is empty')
-            return None
+        else:
+            return self._cards.pop() # Draw a PlayingCard.
 
     def discard(self, card: PlayingCard) -> None:
         """
         Discard a `PlayingCard` handed to `CardDealer`.
         """
-        self.__discard.append(card)
+        self._discards.append(card)
 
 
 __all__ = ['PlayingCard', 'CardDeck', 'CardShoe']
