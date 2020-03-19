@@ -4,7 +4,7 @@ from typing import *
 from . import PlayingCard, CardSet
 
 
-@dataclass
+@dataclass(repr=False)
 class CardDeck(CardSet):
     """
     A dataclass representing an entire `CardDeck` of `PlayingCard`s.

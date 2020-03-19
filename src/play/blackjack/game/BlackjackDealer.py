@@ -14,7 +14,6 @@ class BlackjackDealer(CardDealer):
 
     def deal(self):
         # Initialize CardHands
-        self.log.debug('CardHand initialization')
         for player in self.table.players:
             player.hands = BlackjackHand.gen(player)
         # First round deal

@@ -7,7 +7,7 @@ from .. import GameObject
 from . import PlayingCard, CardSet, CardDeck
 
 
-@dataclass
+@dataclass(repr=False)
 class CardShoe(CardSet):
     """
     A device used to hold multiple decks of cards typically 4, 6 or 8.

@@ -61,7 +61,7 @@ class CardDealer(CardPlayer):
         card = self.__shoe.draw() # Draw a PlayingCard from the CardShoe.
         self.__drawn.append(card) # Add it to the "drawn record".
         card.up = reveal
-        self.log.debug('draw: %s' % card)
+        self.log.debug('draw->%r' % card)
         return card
 
     def deal(self):
@@ -130,7 +130,7 @@ class CardDealer(CardPlayer):
         """
         # Discard CardHands handed to the CardDealer.
         for hand in hands:
-            self.log.debug('discarding %s CardHand' % hand.player)
+            self.log.debug('discard->%r' % hand)
             self.discard(cards=hand.cards)
         # Discard PlayingCards handed to the CardDealer.
         for card in cards:
@@ -162,9 +162,9 @@ class CardDealer(CardPlayer):
         reveal -- A boolean representing the orientation of the PlayingCard.
         """
         card = self.draw(reveal)
-        self.log.info('%s.hand(%i).hit(%s)' % (player, hand_ord, card))
         hand = player.hand(hand_ord)
-        hand.hit(card)
+        hand.add(card)
+        self.log.info('%r.add(%s)' % (hand, card))
 
 
 __all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer', 'CardTable']

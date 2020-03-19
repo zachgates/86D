@@ -14,9 +14,6 @@ class CardPlayer(GameObject):
         self.__hands: List[CardHand] = [] # Initialize in subclass
         self.__table = None # Reference to a CardPlayer's CardTable
 
-    def __str__(self):
-        return '%s(%s)' % (self.__class__.__name__, self.count)
-
     @property
     def table(self):
         """

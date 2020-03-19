@@ -10,10 +10,10 @@ class __GameObject(type):
         """
         Add a `Logger` to any `GameObject` type.
         """
-        obj = super().__new__(cls, name, bases, dct)
-        obj.log = logging.getLogger(name)
-        obj.count = 0
-        return obj
+        cls = super().__new__(cls, name, bases, dct)
+        cls.log = logging.getLogger(name)
+        cls.count = 0
+        return cls
 
 
 class GameObject(object, metaclass=__GameObject):
@@ -24,12 +24,21 @@ class GameObject(object, metaclass=__GameObject):
         """
         Increase the object count upon creation of a new `GameObject`.
         """
-        obj = super().__new__(cls)
-        obj.count = cls.count
-        obj.log = cls.log.getChild(str(obj.count))
-        obj.log.debug('generated')
+        self = super().__new__(cls)
+        self.count = cls.count
+        self.log = self.log.getChild(repr(self))
+        self.log.debug('generated')
         cls.count += 1
-        return obj
+        return self
+
+    def __hash__(self):
+        return hash((self.__class__, self.count))
+
+    def __repr__(self):
+        return '%s(%i)' % (self.__class__.__name__, self.count)
+
+    def __str__(self):
+        return repr(self)
 
 
 __all__ = ['GameObject']

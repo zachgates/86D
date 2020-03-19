@@ -1,6 +1,9 @@
+from dataclasses import *
+
 from .. import GameObject
 
 
+@dataclass(repr=False)
 class CasinoToken(GameObject):
     """
     A dataclass representing a single CasinoToken of a denomination.

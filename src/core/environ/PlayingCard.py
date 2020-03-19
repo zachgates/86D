@@ -3,7 +3,7 @@ from dataclasses import *
 from .. import GameObject
 
 
-@dataclass
+@dataclass(repr=False)
 class PlayingCard(GameObject):
     """
     A dataclass representing a single `PlayingCard` in a `CardDeck`.
@@ -21,7 +21,7 @@ class PlayingCard(GameObject):
     hand: "CardHand" = None # Points to the (optional) PlayingCard's CardHand
     up: bool = False # Indicates an "upcard" (face-up)
 
-    def __repr__(self):
+    def __str__(self):
         if self.up:
             return '<%s of %s>' % (
                 PlayingCard.RANK_NAMES[self.rank],

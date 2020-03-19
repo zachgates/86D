@@ -3,7 +3,7 @@ from dataclasses import *
 from ....core import CardHand
 
 
-@dataclass
+@dataclass(repr=False)
 class BlackjackHand(CardHand):
     """
     A dataclass representing a single BlackjackHand type of CardHand.
