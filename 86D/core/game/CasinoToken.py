@@ -20,6 +20,10 @@ class CasinoToken(GameObject):
         """
         self._assert((self.value in self.TokenValues), 'no $%i chip.' % self.value)
 
+    def __eq__(self, other):
+        self._assert(isinstance(other, CasinoToken), 'cannot compare non-token.')
+        return self.value == other.value
+
     def __str__(self):
         """
         Render a `CasinoToken` to a human-readable string.
