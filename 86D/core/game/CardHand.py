@@ -15,6 +15,9 @@ class CardHand(CardSet):
     _bet: List[CasinoToken] = field(default_factory=list)
     _cards: List[PlayingCard] = field(default_factory=list) # All PlayingCards
 
+    def __post_init__(self):
+        self._assert(self.player, 'CardHand must be assigned to CardPlayer')
+
     @classmethod
     def gen(cls, player: "CardPlayer", n_hands: int = 1) -> tuple:
         """

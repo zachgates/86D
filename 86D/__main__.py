@@ -6,6 +6,8 @@ if __name__ == '__main__':
     t = BlackjackTable()
     t.add_player(p1)
     t.add_player(p2)
+    b1 = t.gather_bet(p1, 513)
+    b2 = t.gather_bet(p2, 201)
     t.play()
     t.remove_player(p1)
     t.remove_player(p2)

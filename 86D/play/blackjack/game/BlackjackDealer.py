@@ -7,6 +7,8 @@ from . import BlackjackHand
 @gameclass
 class BlackjackDealer(CardDealer):
 
+    HandType = BlackjackHand
+
     def load(self):
         # Load the CardShoe with N-1 decks where N is the number of CardPlayers
         super().load(len(self.table.players) - 1)
@@ -16,9 +18,6 @@ class BlackjackDealer(CardDealer):
         self.insurance()
 
     def deal(self):
-        # Initialize CardHands
-        for player in self.table.players:
-            player.hands = BlackjackHand.gen(player)
         # First round deal
         self.log.debug('first round deal.')
         for player in reversed(self.table.players):
@@ -37,7 +36,7 @@ class BlackjackDealer(CardDealer):
             self.hand(0).up = True
             # Handle CardDealer blackjack.
             if self.hand(0).blackjack:
-                self.log.info('dealer has blackjack: %s.' % self.hand(0))
+                self.log.info('blackjack: %s.' % self.hand(0))
                 for player in self.table.players[1:]: # Exclude CardDealer.
                     # Reveal CardPlayer's hand.
                     hand = player.hand(0)

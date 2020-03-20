@@ -73,6 +73,7 @@ class CardTable(GameObject):
         else:
             self._players.append(player)
             player.waiting = False
+            player.hands = self.dealer.HandType.gen(player)
 
         # Assign this CardTable to the CardPlayer.
         player.table = self

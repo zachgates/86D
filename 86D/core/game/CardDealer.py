@@ -11,16 +11,16 @@ class CardDealer(CardPlayer):
     Deals cards from a special device called a "dealer's shoe".
     """
 
+    HandType = CardHand
+
     _shoe: CardShoe = CardShoe()
     _drawn: List[PlayingCard] = field(default_factory=list)
 
-    def __init__(self, table: "CardTable"):
+    def __post_init__(self):
         """
-        Initialize the `CardDealer` with an empty `CardShoe` and empty "drawn
-        record". Assign them a `CardTable`.
+        Initialize the `CardDealer` with an empty `CardHand`.
         """
-        super().__init__()
-        self.table = table
+        self._hands = self.HandType.gen(self)
 
     @property
     def deck(self):
