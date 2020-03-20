@@ -81,3 +81,6 @@ class CardSet(GameObject):
             for card in self.cards:
                 card.discard()
             self.log.debug('discarded.')
+
+
+__all__ = ['CardSet']

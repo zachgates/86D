@@ -83,4 +83,4 @@ class CardPlayer(GameObject):
         return self._funds
 
 
-__all__ = ['CardPlayer', 'CardHand']
+__all__ = ['CardPlayer']

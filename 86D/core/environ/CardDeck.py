@@ -31,4 +31,4 @@ class CardDeck(CardSet):
         self.log.debug('generated (52) cards.')
 
 
-__all__ = ['CardDeck', 'PlayingCard']
+__all__ = ['CardDeck']

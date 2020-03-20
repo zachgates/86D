@@ -197,4 +197,4 @@ class CardDealer(CardPlayer):
             hand.player.log.info('losing hand: %s.' % hand)
 
 
-__all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer']
+__all__ = ['CardDealer']

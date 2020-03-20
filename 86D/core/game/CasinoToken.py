@@ -36,3 +36,6 @@ class CasinoToken(GameObject):
         Property getter: Returns the color of this denomination of CasinoToken.
         """
         return self.TokenColors[self.value]
+
+
+__all__ = ['CasinoToken']

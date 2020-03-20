@@ -35,4 +35,4 @@ class CardHand(CardSet):
             self._assert(False, "can't generate no hands.") # N = 0
 
 
-__all__ = ['CardHand', 'PlayingCard']
+__all__ = ['CardHand']

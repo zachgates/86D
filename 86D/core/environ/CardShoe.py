@@ -73,4 +73,4 @@ class CardShoe(CardSet):
         self._discards.append(card)
 
 
-__all__ = ['PlayingCard', 'CardDeck', 'CardShoe']
+__all__ = ['CardShoe']
