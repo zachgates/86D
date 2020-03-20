@@ -15,7 +15,7 @@ class CasinoToken(GameObject):
     value: int
 
     def __post_init__(self):
-        self._assert((self.value in self.TokenValues), 'no $%i chip' % self.value)
+        self._assert((self.value in self.TokenValues), 'no $%i chip.' % self.value)
 
     def __str__(self):
         return 'Chip($%i)' % self.value

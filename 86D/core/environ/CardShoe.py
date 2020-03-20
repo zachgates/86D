@@ -44,7 +44,7 @@ class CardShoe(CardSet):
         """
         self._cards.extend(self._discards)
         self._discards = []
-        self.log.info('reloaded')
+        self.log.debug('reloaded.')
 
     def shuffle(self, n_repeat: int = 1) -> None:
         """
@@ -61,7 +61,7 @@ class CardShoe(CardSet):
         Draw any number, N, `PlayingCard`s from the `CardShoe`.
         """
         if self.empty:
-            self._assert(False, 'the CardShoe is empty', warn=True)
+            self._assert(False, 'the CardShoe is empty.', warn=True)
             return None
         else:
             return self._cards.pop() # Draw a PlayingCard.

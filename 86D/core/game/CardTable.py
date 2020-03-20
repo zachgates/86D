@@ -19,7 +19,7 @@ class CardTable(GameObject):
     def __post_init__(self):
         self._in_play: bool = False # Active gameplay indicator
         self._assert(issubclass(self.dealer_type, CardDealer),
-                    'dealer_type must be CardDealer or subclass')
+                    'dealer_type must be CardDealer or subclass.')
 
     @property
     def active(self) -> bool:
@@ -60,7 +60,7 @@ class CardTable(GameObject):
         Try to seat a `CardPlayer` at this `CardTable`.
         """
         # Check for empty seats
-        self._assert(len(self.seated) < self.MaxPlayers, 'no seats available')
+        self._assert(len(self.seated) < self.MaxPlayers, 'no seats available.')
 
         # If gameplay has begun, seat the CardPlayer, but as "waiting".
         if self.active:
@@ -80,11 +80,11 @@ class CardTable(GameObject):
         """
         # Remove a CardPlayer who is seated, but waiting.
         if player in self._waiting:
-            self.log.debug('%r stopped waiting' % player)
+            self.log.debug('%r stopped waiting.' % player)
             self._waiting.remove(player)
         # Remove a seated CardPlayer from a game.
         elif player in self._players:
-            self.log.debug('removing %r' % player)
+            self.log.debug('remove_player(%r)' % player)
             # Discard any CardHands that the CardPlayer holds.
             self.dealer.discard(hands=player.hands)
             player.hands = []
@@ -94,7 +94,7 @@ class CardTable(GameObject):
             player.table = None
         else:
             # CardPlayer supplied is not assigned this CardTable.
-            self._assert(False, 'CardPlayer is not even seated')
+            self._assert(False, 'CardPlayer is not even seated.')
 
         # Check if any CardPlayers are seated, aside from the CardDealer.
         if self.players == (self.dealer,) and self.active:
@@ -106,10 +106,12 @@ class CardTable(GameObject):
         Generate the necessary `CasinoToken`s for the `CardPlayer`'s bet.
         """
         # Evaluate the CardPlayer's funds.
-        if player.funds >= value:
-            self._assert(False, 'player has too few funds')
+        if player.funds < value:
+            self._assert(False, '%r has too few funds. tried betting ($%i).' \
+                                % (player, value), warn=True)
             return
         # Generate the necessary CasinoTokens.
+        self.log.info('generating ($%i) in CasinoTokens.' % value)
         tokens = []
         while value:
             for val in reversed(CasinoToken.TokenValues):
@@ -125,14 +127,14 @@ class CardTable(GameObject):
         """
         # Check if a game is in play at this CardTable.
         if self.active:
-            self._assert(False, 'game is already in play')
+            self._assert(False, 'game is already in play.')
             return
         # Ensure enough players are seated.
         if (len(self.players) >= self.MinPlayers):
             self._in_play = True  # Indicate CardTable is active.
             self.dealer.play()
         else:
-            self._assert(False, 'too few players to begin', warn=True)
+            self._assert(False, 'too few players to begin.', warn=True)
 
 
 __all__ = ['CardTable']

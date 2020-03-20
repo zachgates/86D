@@ -33,8 +33,8 @@ class GameObject(object, metaclass=__GameObject):
         """
         self = super().__new__(cls)
         self.count = cls.count
-        self.log = self.log.getChild(repr(self))
-        self.log.debug('generated')
+        self.log = logging.getLogger().getChild(repr(self))
+        self.log.debug('generated.')
         cls.count += 1
         return self
 

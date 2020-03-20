@@ -48,7 +48,7 @@ class PlayingCard(GameObject):
         # Unassign any CardHand.
         if self.hand is not None:
             self.hand.discard(self)
-        self.log.debug('discarded')
+        self.log.debug('discard()')
 
 
 __all__ = ['PlayingCard']

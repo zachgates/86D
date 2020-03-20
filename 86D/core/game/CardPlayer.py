@@ -27,11 +27,11 @@ class CardPlayer(GameObject):
         from . import CardTable # Avoid circular import.
         # Check if the CardPlayer has already been assigned to a table.
         if table:
-            self._assert(not self.table, 'CardPlayer already has a CardTable')
+            self._assert(not self.table, 'CardPlayer already has a CardTable.')
             return
         # Ensure table is either a CardTable or no table.
         self._assert(isinstance(table, (CardTable, type(None))),
-                    'table must be CardTable or subclass, or None')
+                    'table must be CardTable or subclass, or None.')
         self._table = table
 
     @property
@@ -48,7 +48,7 @@ class CardPlayer(GameObject):
         """
         # Ensure all hands are CardHands.
         self._assert(all(isinstance(hand, CardHand) for hand in hands),
-                    'all hands must be of type CardHand or subclass')
+                    'all hands must be of type CardHand or subclass.')
         # Assign each CardHand to the CardPlayer.
         for hand in hands:
             hand.player = self
@@ -65,7 +65,7 @@ class CardPlayer(GameObject):
             # Try to access the indicated CardHand.
             return self.hands[hand_ord]
         except IndexError:
-            self._assert(False, 'no CardHand at index: %i' % hand_ord)
+            self._assert(False, 'no CardHand at index: %i.' % hand_ord)
             return None
 
     @property

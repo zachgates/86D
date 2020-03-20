@@ -44,14 +44,14 @@ class CardDealer(CardPlayer):
         `CardDealer` loads the `CardShoe` with N `CardDeck`s; default is one.
         """
         self._shoe.load(n_decks)
-        self.log.debug('loaded (%i) CardDecks into the CardShoe' % n_decks)
+        self.log.debug('loaded (%i) CardDecks into the CardShoe.' % n_decks)
 
     def shuffle(self):
         """
         `CardDealer` shuffles the `PlayingCard`s in the `CardShoe`.
         """
         self._shoe.shuffle()
-        self.log.debug('shuffled')
+        self.log.debug('shuffled.')
 
     def draw(self, reveal: bool = False, n_cards: int = 1) -> PlayingCard:
         """
@@ -64,11 +64,11 @@ class CardDealer(CardPlayer):
         card = self._shoe.draw() # Draw a PlayingCard from the CardShoe.
         self._drawn.append(card) # Add it to the "drawn record".
         card.up = reveal
-        self.log.debug('draw->%r' % card)
+        self.log.debug('draw() -> %r' % card)
         return card
 
     def deal(self):
-        self.log.warning('deal logic should be implemented in subclass')
+        self._assert(False, 'deal logic should be implemented in subclass.')
         ...
 
     def __discard(self, card: PlayingCard = None, n_cards: int = 0):
@@ -84,21 +84,21 @@ class CardDealer(CardPlayer):
         # Remove the supplied PlayingCard from the "drawn record".
         if card:
             # Verify the supplied PlayingCard is in the "drawn record".
-            self._assert(card in self._drawn, '%r not drawn by me' % card)
+            self._assert(card in self._drawn, '%r not drawn by me.' % card)
             card.discard()
             self._drawn.remove(card)
             self._shoe.discard(card)
         # No PlayingCard supplied to discard.
         else:
             # Ensure n_cards is set if no card was supplied.
-            self._assert(n_cards, 'no card supplied assumes n_cards != 0')
+            self._assert(n_cards, 'no card supplied assumes n_cards != 0.')
             # Discard any number, N, PlayingCards from the CardShoe.
             cards = []
             while n_cards > 0:
                 # Attempt to draw a PlayingCard from the CardShoe.
                 card = self.draw()
                 # Check if enough PlayingCards in CardShoe to complete action.
-                self._assert(card, 'not enough PlayingCards in CardShoe')
+                self._assert(card, 'not enough PlayingCards in CardShoe.')
                 cards.append(card)
                 n_cards -= 1
             else:
@@ -125,7 +125,7 @@ class CardDealer(CardPlayer):
         """
         # Discard CardHands handed to the CardDealer.
         for hand in hands:
-            self.log.debug('discard->%r' % hand)
+            self.log.debug('discard(%r)' % hand)
             self.discard(cards=hand.cards)
         # Discard PlayingCards handed to the CardDealer.
         for card in cards:
@@ -168,12 +168,12 @@ class CardDealer(CardPlayer):
         are assumed to have won.
         """
         if player is not None:
-            self._assert(isinstance(player, CardPlayer), 'player not CardPlayer')
+            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
             for hand in player.hands:
                 self.win(hand)
         else:
-            self._assert(hand.player, 'CardHand has no assigned CardPlayer')
-            hand.player.log.info('winning hand: %s' % hand)
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
+            hand.player.log.info('winning hand: %s.' % hand)
 
     def lose(self, hand: CardHand, player: CardPlayer = None):
         """
@@ -182,12 +182,12 @@ class CardDealer(CardPlayer):
         are assumed to have lost.
         """
         if player is not None:
-            self._assert(isinstance(player, CardPlayer), 'player not CardPlayer')
+            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
             for hand in player.hands:
                 self.lose(hand)
         else:
-            self._assert(hand.player, 'CardHand has no assigned CardPlayer')
-            hand.player.log.info('losing hand: %s' % hand)
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
+            hand.player.log.info('losing hand: %s.' % hand)
 
 
 __all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer']

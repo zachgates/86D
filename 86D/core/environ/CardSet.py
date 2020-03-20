@@ -47,16 +47,16 @@ class CardSet(GameObject):
         """
         for card in self.cards:
             card.up = bool(reveal)
-        self.log.debug('turned face-up')
+        self.log.debug('turned face-up.')
 
     def add(self, card: PlayingCard) -> None:
         """
         Add a `PlayingCard` to the `CardHand`.
         """
-        self._assert(isinstance(card, PlayingCard), 'card not a PlayingCard')
+        self._assert(isinstance(card, PlayingCard), 'card not a PlayingCard.')
         self._cards.append(card)
         card.hand = self # Reference this CardHand from the PlayingCard.
-        self.log.debug('add->%r' % card)
+        self.log.debug('add(%r)' % card)
 
     def discard(self, card: PlayingCard = None) -> None:
         """
@@ -65,13 +65,13 @@ class CardSet(GameObject):
         """
         if card:
             # Inspect the supplied card.
-            self._assert((card in self.cards), 'supplied card not in CardHand')
+            self._assert((card in self.cards), 'supplied card not in CardHand.')
             # Discard the supplied PlayingCard from the CardHand.
             card.hand = None # Unassign a CardHand.
             self._cards.remove(card)
-            self.log.debug('discard->%r' % card)
+            self.log.debug('discard(%r)' % card)
         else:
             # Discard all PlayingCards from the CardHand.
             for card in self.cards:
                 card.discard()
-            self.log.debug('discarded')
+            self.log.debug('discarded.')

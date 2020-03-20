@@ -22,14 +22,14 @@ class CardHand(CardSet):
         """
         # Generate N CardHands.
         if n_hands == 1:
-            cls.log.debug('generating an empty CardHand for %s' % player)
+            cls.log.debug('generating an empty CardHand for %s.' % player)
             return [cls(player=player)]
         elif n_hands > 1:
-            cls.log.debug('generating %i empty CardHands for %s' \
+            cls.log.debug('generating %i empty CardHands for %s.' \
                           % (n_hands, player))
             return [cls.gen(player) for _ in range(n_hands)]
         else:
-            cls.log.error("can't generate no hands") # N = 0
+            self._assert(False, "can't generate no hands.") # N = 0
 
 
 __all__ = ['CardHand', 'PlayingCard']
