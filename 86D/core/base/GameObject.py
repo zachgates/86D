@@ -81,6 +81,7 @@ class GameObject(object, metaclass=_GameObject):
                 self.log.warning(e, stack_info=LOG_TRACE)
             else:
                 self.log.error(e, stack_info=LOG_TRACE)
+                raise e
 
 
 __all__ = ['gameclass', 'GameObject']
