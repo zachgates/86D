@@ -14,6 +14,9 @@ class CardSet(GameObject):
     _cards: List[PlayingCard]
 
     def __str__(self):
+        """
+        Render a `CardSet` to a human-readable string.
+        """
         str_ = str(tuple(str(card) for card in self.cards))
         str_ = str_.replace("'", '')
         return str_

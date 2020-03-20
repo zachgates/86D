@@ -17,6 +17,9 @@ class CardTable(GameObject):
     _waiting: List["CardPlayer"] = field(default_factory=list)
 
     def __post_init__(self):
+        """
+        Verify the `CardTable`'s `dealer_type`.
+        """
         self._in_play: bool = False # Active gameplay indicator
         self._assert(issubclass(self.dealer_type, CardDealer),
                     'dealer_type must be CardDealer or subclass.')

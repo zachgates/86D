@@ -39,18 +39,34 @@ class GameObject(object, metaclass=__GameObject):
         return self
 
     def __hash__(self):
+        """
+        Default hashing logic.
+        """
         return hash((self.__class__, self.count))
 
     def __eq__(self, other):
+        """
+        Default equality test compares `hash` values.
+        """
         return hash(self) == hash(other)
 
     def __repr__(self):
+        """
+        Default `repr` logic; i.e. `PlayingCard(0)` represents the first
+        generated `PlayingCard`.
+        """
         return '%s(%i)' % (self.__class__.__name__, self.count)
 
     def __str__(self):
+        """
+        Default `str` logic points to `repr`.
+        """
         return repr(self)
 
     def _assert(self, cond, msg, warn=False):
+        """
+        Helper function for logging warnings and errors.
+        """
         try:
             assert cond, msg
         except AssertionError as e:

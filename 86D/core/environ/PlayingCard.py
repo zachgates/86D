@@ -21,10 +21,16 @@ class PlayingCard(GameObject):
     hand: "CardHand" = None # Points to the (optional) PlayingCard's CardHand
     up: bool = False # Indicates an "upcard" (face-up)
 
-    def __hash__(self):
-        return hash((self.rank, self.suit))
+    def __eq__(self, other):
+        """
+        `PlayingCard` equality tests compare `PlayingCard` rank and suit.
+        """
+        return (self.rank, self.suit) == (other.rank, other.suit)
 
     def __str__(self):
+        """
+        Render a `PlayingCard` to a human-readable string.
+        """
         if self.up:
             return '<%s of %s>' % (
                 self.RankNames[self.rank],

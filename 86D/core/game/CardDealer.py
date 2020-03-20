@@ -68,6 +68,9 @@ class CardDealer(CardPlayer):
         return card
 
     def deal(self):
+        """
+        Implement deal logic in a subclass.
+        """
         self._assert(False, 'deal logic should be implemented in subclass.')
         ...
 
