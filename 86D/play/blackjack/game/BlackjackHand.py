@@ -1,9 +1,9 @@
 from dataclasses import *
 
-from ....core import CardHand
+from ....core import gameclass, CardHand
 
 
-@dataclass(repr=False)
+@gameclass
 class BlackjackHand(CardHand):
     """
     A dataclass representing a single BlackjackHand type of CardHand.
