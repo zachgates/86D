@@ -2,7 +2,7 @@ import logging
 
 from dataclasses import dataclass
 
-from ... import VERBOSE
+from ... import LOG_TRACE
 
 
 def gameclass(cls):
@@ -55,9 +55,9 @@ class GameObject(object, metaclass=__GameObject):
             assert cond, msg
         except AssertionError as e:
             if warn:
-                self.log.warning(e, stack_info=VERBOSE)
+                self.log.warning(e, stack_info=LOG_TRACE)
             else:
-                self.log.error(e, stack_info=VERBOSE)
+                self.log.error(e, stack_info=LOG_TRACE)
 
 
 __all__ = ['gameclass', 'GameObject']

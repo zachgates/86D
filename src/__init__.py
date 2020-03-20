@@ -1,8 +1,9 @@
 from logging import DEBUG, INFO
 
 
-VERBOSE = False
+VERBOSE = True
 LOG_LEVEL = INFO
+LOG_TRACE = False
 
 
-__all__ = ['VERBOSE', 'LOG_LEVEL']
+__all__ = ['VERBOSE', 'LOG_LEVEL', 'LOG_TRACE']
