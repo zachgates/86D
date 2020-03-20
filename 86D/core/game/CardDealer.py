@@ -94,15 +94,19 @@ class CardDealer(CardPlayer):
         # No PlayingCard supplied to discard.
         else:
             # Ensure n_cards is set if no card was supplied.
-            self._assert(n_cards, 'no card supplied assumes n_cards != 0.')
+            self._assert(n_cards, 'no card supplied assumes n_cards != 0.',
+                         warn=True)
             # Discard any number, N, PlayingCards from the CardShoe.
             cards = []
             while n_cards > 0:
                 # Attempt to draw a PlayingCard from the CardShoe.
                 card = self.draw()
                 # Check if enough PlayingCards in CardShoe to complete action.
-                self._assert(card, 'not enough PlayingCards in CardShoe.')
-                cards.append(card)
+                if not card:
+                    self._assert(False, 'not enough PlayingCards in CardShoe.',
+                                 warn=True)
+                else:
+                    cards.append(card)
                 n_cards -= 1
             else:
                 if n_cards < 0:
