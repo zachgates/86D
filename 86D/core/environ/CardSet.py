@@ -13,6 +13,9 @@ class CardSet(GameObject):
 
     _cards: List[PlayingCard]
 
+    def __eq__(self, other):
+        return set(self.cards) == set(other.cards)
+
     def __str__(self):
         """
         Render a `CardSet` to a human-readable string.

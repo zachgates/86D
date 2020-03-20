@@ -6,10 +6,13 @@ from ... import LOG_TRACE
 
 
 def gameclass(cls):
+    """
+    A decorator for `GameObject` dataclasses.
+    """
     return dataclass(repr=False, eq=False)(cls)
 
 
-class __GameObject(type):
+class _GameObject(type):
     """
     A metaclass which assigns a logger to each `GameObject`.
     """
@@ -18,25 +21,14 @@ class __GameObject(type):
         """
         Add a `Logger` to any `GameObject` type.
         """
+        dct.update({
+            '__hash__': _GameObject.__hash__,
+            '__eq__': _GameObject.__eq__
+        })
         cls = super().__new__(cls, name, bases, dct)
         cls.log = logging.getLogger(name)
         cls.count = 0
         return cls
-
-
-@gameclass
-class GameObject(object, metaclass=__GameObject):
-
-    def __new__(cls, *args, **kwargs):
-        """
-        Increase the object count upon creation of a new `GameObject`.
-        """
-        self = super().__new__(cls)
-        self.count = cls.count
-        self.log = logging.getLogger().getChild(repr(self))
-        self.log.debug('generated.')
-        cls.count += 1
-        return self
 
     def __hash__(self):
         """
@@ -49,6 +41,21 @@ class GameObject(object, metaclass=__GameObject):
         Default equality test compares `hash` values.
         """
         return hash(self) == hash(other)
+
+
+@gameclass
+class GameObject(object, metaclass=_GameObject):
+
+    def __new__(cls, *args, **kwargs):
+        """
+        Increase the object count upon creation of a new `GameObject`.
+        """
+        self = super().__new__(cls)
+        self.count = cls.count
+        self.log = logging.getLogger().getChild(repr(self))
+        self.log.debug('generated.')
+        cls.count += 1
+        return self
 
     def __repr__(self):
         """
