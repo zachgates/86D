@@ -117,12 +117,14 @@ class CardTable(GameObject):
         self.log.info('generating ($%i) in CasinoTokens.' % value)
         player._funds -= value
         tokens = []
+        # Decompose the bet value.
         while value:
             for val in reversed(CasinoToken.TokenValues):
                 if value % val == 0:
                     tokens.append(CasinoToken(val))
                     value -= val
                     break
+        # Return the required CasinoTokens as a tuple from least to greatest.
         return tokens
 
     def play(self):
