@@ -1,6 +1,6 @@
 from dataclasses import *
 
-from ....core import gameclass, CardDealer
+from ...core import gameclass, CardDealer
 from . import BlackjackHand
 
 

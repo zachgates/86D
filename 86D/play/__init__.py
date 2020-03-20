@@ -1,4 +1,4 @@
 from .blackjack import *
 
 
-__all__ = ['BlackjackTable', 'BlackjackHand', 'BlackjackDealer']
+__all__ = ['BlackjackHand', 'BlackjackDealer']

@@ -18,11 +18,12 @@ class CardTable(GameObject):
 
     def __post_init__(self):
         """
-        Verify the `CardTable`'s `dealer_type`.
+        Create and assign the `CardTable`'s `CardDealer`.
         """
         self._in_play: bool = False # Active gameplay indicator
         self._assert(issubclass(self.dealer_type, CardDealer),
                     'dealer_type must be CardDealer or subclass.')
+        self._dealer = self.dealer_type(self)
 
     @property
     def active(self) -> bool:
@@ -36,9 +37,6 @@ class CardTable(GameObject):
         """
         Property getter: Points to the `CardTable`'s `CardDealer`.
         """
-        if self._dealer is None:
-            # Create and assign a dealer. Executes upon first reference.
-            self._dealer = self.dealer_type(self)
         return self._dealer
 
     @property

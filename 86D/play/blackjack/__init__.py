@@ -1,6 +1,5 @@
-from .environ import BlackjackTable
-from .game import BlackjackHand
-from .game import BlackjackDealer
+from .BlackjackHand import BlackjackHand
+from .BlackjackDealer import BlackjackDealer
 
 
-__all__ = ['BlackjackTable', 'BlackjackHand', 'BlackjackDealer']
+__all__ = ['BlackjackHand', 'BlackjackDealer']

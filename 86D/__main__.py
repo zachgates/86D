@@ -1,9 +1,9 @@
 if __name__ == '__main__':
-    from .core import CardPlayer
-    from .play import BlackjackTable
+    from .core import CardTable, CardPlayer
+    from .play import BlackjackDealer
     p1 = CardPlayer(_funds=5000)
     p2 = CardPlayer(_funds=5000)
-    t = BlackjackTable()
+    t = CardTable(BlackjackDealer)
     t.add_player(p1)
     t.add_player(p2)
     b1 = t.gather_bet(p1, 513)
