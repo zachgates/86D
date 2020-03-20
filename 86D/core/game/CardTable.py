@@ -115,6 +115,7 @@ class CardTable(GameObject):
             return
         # Generate the necessary CasinoTokens.
         self.log.info('generating ($%i) in CasinoTokens.' % value)
+        player._funds -= value
         tokens = []
         while value:
             for val in reversed(CasinoToken.TokenValues):
