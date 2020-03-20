@@ -1,22 +1,28 @@
 from dataclasses import *
 
-from .. import GameObject
+from .. import gameclass, GameObject
 
 
-@dataclass(repr=False)
+@gameclass
 class CasinoToken(GameObject):
     """
     A dataclass representing a single CasinoToken of a denomination.
     """
 
-    COLORS = ['white', 'yellow', 'red', 'blue', 'grey', 'green', 'orange', 'black']
-    VALUES = [1, 2, 5, 10, 20, 25, 50, 100]
+    TokenColors = ['white', 'yellow', 'red', 'blue', 'grey', 'green', 'orange', 'black']
+    TokenValues = [1, 2, 5, 10, 20, 25, 50, 100]
 
     value: int
+
+    def __post_init__(self):
+        self._assert((self.value in self.TokenValues), 'no $%i chip' % self.value)
+
+    def __str__(self):
+        return 'Chip($%i)' % self.value
 
     @property
     def color(self):
         """
         Property getter: Returns the color of this denomination of CasinoToken.
         """
-        return self.COLORS[self.value]
+        return self.TokenColors[self.value]

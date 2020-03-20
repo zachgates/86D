@@ -1,4 +1,4 @@
-from .GameObject import GameObject
+from .GameObject import gameclass, GameObject
 
 
-__all__ = ['GameObject']
+__all__ = ['gameclass', 'GameObject']

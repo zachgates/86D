@@ -1,46 +1,45 @@
+from dataclasses import *
 from typing import *
 
-from .. import GameObject, CardTable
+from .. import gameclass, GameObject
 from . import CardHand
 
 
+@gameclass
 class CardPlayer(GameObject):
 
-    def __init__(self):
-        """
-        Initialize the `CardPlayer` with an empty `CardHand` record and without
-        an assigned table.
-        """
-        self.__hands: List[CardHand] = [] # Initialize in subclass
-        self.__table = None # Reference to a CardPlayer's CardTable
+    _table: "CardTable" = None
+    _hands: List[CardHand] = field(default_factory=list)
+    _funds: int = 0
 
     @property
     def table(self):
         """
         Property getter: Points to a `CardTable` assigned to the `CardPlayer`.
         """
-        return self.__table
+        return self._table
 
     @table.setter
-    def table(self, table: CardTable):
+    def table(self, table: "CardTable"):
         """
         Property setter: Sanitizes a `CardTable` assigned to the `CardPlayer`.
         """
+        from . import CardTable # Avoid circular import.
         # Check if the CardPlayer has already been assigned to a table.
-        if self.table and (table is not None):
-            self.log.error('CardPlayer already has a CardTable')
-
+        if table:
+            self._assert(not self.table, 'CardPlayer already has a CardTable')
+            return
         # Ensure table is either a CardTable or no table.
         self._assert(isinstance(table, (CardTable, type(None))),
                     'table must be CardTable or subclass, or None')
-        self.__table = table
+        self._table = table
 
     @property
     def hands(self):
         """
         Property getter: Points to the `CardHand`s of the `CardPlayer`.
         """
-        return tuple(self.__hands)
+        return tuple(self._hands)
 
     @hands.setter
     def hands(self, hands: list):
@@ -53,7 +52,7 @@ class CardPlayer(GameObject):
         # Assign each CardHand to the CardPlayer.
         for hand in hands:
             hand.player = self
-            self.__hands.append(hand)
+            self._hands.append(hand)
 
     def hand(self, hand_ord: int = 0):
         """
@@ -66,7 +65,7 @@ class CardPlayer(GameObject):
             # Try to access the indicated CardHand.
             return self.hands[hand_ord]
         except IndexError:
-            self.log.error('no CardHand at index: %i' % hand_ord)
+            self._assert(False, 'no CardHand at index: %i' % hand_ord)
             return None
 
     @property
@@ -75,6 +74,13 @@ class CardPlayer(GameObject):
         Property getter: Points to all `PlayingCard`s the `CardPlayer` holds.
         """
         return tuple(card for hand in self.hands for card in hand.cards)
+
+    @property
+    def funds(self):
+        """
+        Property getter: Points to the total value of the `CardPlayer`'s funds.
+        """
+        return self._funds
 
 
 __all__ = ['CardPlayer', 'CardHand']

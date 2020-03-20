@@ -3,17 +3,18 @@ import random
 from dataclasses import *
 from typing import *
 
-from .. import GameObject
+from .. import gameclass, GameObject
 from . import PlayingCard, CardSet, CardDeck
 
 
-@dataclass(repr=False)
+@gameclass
 class CardShoe(CardSet):
     """
     A device used to hold multiple decks of cards typically 4, 6 or 8.
     Cards are dealt one at a time from the shoe.
     """
 
+    _cards: List[PlayingCard] = field(default_factory=list)
     _discards: List[PlayingCard] = field(default_factory=list)
 
     @property
@@ -60,7 +61,8 @@ class CardShoe(CardSet):
         Draw any number, N, `PlayingCard`s from the `CardShoe`.
         """
         if self.empty:
-            self.log.warning('the CardShoe is empty')
+            self._assert(False, 'the CardShoe is empty', warn=True)
+            return None
         else:
             return self._cards.pop() # Draw a PlayingCard.
 

@@ -1,6 +1,12 @@
 import logging
 
+from dataclasses import dataclass
+
 from ... import VERBOSE
+
+
+def gameclass(cls):
+    return dataclass(repr=False, eq=False)(cls)
 
 
 class __GameObject(type):
@@ -18,6 +24,7 @@ class __GameObject(type):
         return cls
 
 
+@gameclass
 class GameObject(object, metaclass=__GameObject):
 
     def __new__(cls, *args, **kwargs):
@@ -34,17 +41,23 @@ class GameObject(object, metaclass=__GameObject):
     def __hash__(self):
         return hash((self.__class__, self.count))
 
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
     def __repr__(self):
         return '%s(%i)' % (self.__class__.__name__, self.count)
 
     def __str__(self):
         return repr(self)
 
-    def _assert(self, cond, msg):
+    def _assert(self, cond, msg, warn=False):
         try:
             assert cond, msg
         except AssertionError as e:
-            self.log.error(e, stack_info=VERBOSE)
+            if warn:
+                self.log.warning(e, stack_info=VERBOSE)
+            else:
+                self.log.error(e, stack_info=VERBOSE)
 
 
-__all__ = ['GameObject']
+__all__ = ['gameclass', 'GameObject']

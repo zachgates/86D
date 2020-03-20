@@ -1,18 +1,18 @@
 from dataclasses import *
 from typing import *
 
-from .. import GameObject, PlayingCard, CardSet
+from .. import gameclass, GameObject, PlayingCard, CardSet
 from . import CasinoToken
 
 
-@dataclass(repr=False)
+@gameclass
 class CardHand(CardSet):
     """
     A dataclass representing a single `CardHand` of `PlayingCard`s.
     """
 
     player: "CardPlayer" = None # The CardPlayer the CardHand is assigned to
-    bet: List[CasinoToken] = field(default_factory=list)
+    _bet: List[CasinoToken] = field(default_factory=list)
     _cards: List[PlayingCard] = field(default_factory=list) # All PlayingCards
 
     @classmethod

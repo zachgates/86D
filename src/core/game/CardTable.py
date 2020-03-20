@@ -1,23 +1,25 @@
+from dataclasses import *
 from typing import *
 
-from .. import GameObject
+from .. import gameclass, GameObject
+from . import CasinoToken, CardDealer
 
 
+@gameclass
 class CardTable(GameObject):
 
-    MaxPlayers: int = 7 # "the usual 'full table'"
-    MinPlayers: int = 2
+    MaxPlayers = 7 # "the usual 'full table'"
+    MinPlayers = 2
 
-    def __init__(self, dealer_type: type):
+    dealer_type: type
+    _dealer: CardDealer = None
+    _players: List["CardPlayer"] = field(default_factory=list)
+    _waiting: List["CardPlayer"] = field(default_factory=list)
+
+    def __post_init__(self):
         self._in_play: bool = False # Active gameplay indicator
-        self.__players: List["CardPlayer"] = [] # Players seated and in gameplay
-        self.__waiting: List["CardPlayer"] = [] # Players seated and waiting
-
-        from .. import CardDealer # Avoid circular import
-        self._assert(issubclass(dealer_type, CardDealer),
+        self._assert(issubclass(self.dealer_type, CardDealer),
                     'dealer_type must be CardDealer or subclass')
-        self._dealer: CardDealer = None
-        self.__dealer_type = dealer_type # Supplied by superclass
 
     @property
     def active(self) -> bool:
@@ -33,7 +35,7 @@ class CardTable(GameObject):
         """
         if self._dealer is None:
             # Create and assign a dealer. Executes upon first reference.
-            self._dealer = self.__dealer_type(self)
+            self._dealer = self.dealer_type(self)
         return self._dealer
 
     @property
@@ -42,7 +44,7 @@ class CardTable(GameObject):
         Property getter: Points to a single-dimensional tuple that contains the
         `CardTable`'s `CardDealer` and its "player record" of `CardPlayer`s.
         """
-        return (self._dealer,) + tuple(self.__players)
+        return (self._dealer,) + tuple(self._players)
 
     @property
     def seated(self):
@@ -51,24 +53,22 @@ class CardTable(GameObject):
         `CardTable`'s `CardDealer`, the "player record" of `CardPlayer`'s,
         and the "waiting players record" of `CardPlayer`s, in that order.
         """
-        return self.players + tuple(self.__waiting)
+        return self.players + tuple(self._waiting)
 
     def add_player(self, player: "CardPlayer"):
         """
         Try to seat a `CardPlayer` at this `CardTable`.
         """
         # Check for empty seats
-        if len(self.seated) == self.MaxPlayers:
-            self.log.warning('no seats available') # The CardTable is full.
-            return
+        self._assert(len(self.seated) < self.MaxPlayers, 'no seats available')
 
         # If gameplay has begun, seat the CardPlayer, but as "waiting".
         if self.active:
-            self.__waiting.append(player)
+            self._waiting.append(player)
             player.waiting = True
         # If no game is in play, add the CardPlayer to the "player record".
         else:
-            self.__players.append(player)
+            self._players.append(player)
             player.waiting = False
 
         # Assign this CardTable to the CardPlayer.
@@ -79,40 +79,60 @@ class CardTable(GameObject):
         Remove a seated `CardPlayer` from this `CardTable`.
         """
         # Remove a CardPlayer who is seated, but waiting.
-        if player in self.__waiting:
-            self.__waiting.remove(player)
+        if player in self._waiting:
+            self.log.debug('%r stopped waiting' % player)
+            self._waiting.remove(player)
         # Remove a seated CardPlayer from a game.
-        elif player in self.__players:
+        elif player in self._players:
+            self.log.debug('removing %r' % player)
             # Discard any CardHands that the CardPlayer holds.
             self.dealer.discard(hands=player.hands)
             player.hands = []
             # Remove the CardPlayer from the "player record".
-            self.__players.remove(player)
+            self._players.remove(player)
             # Unassign this CardTable from the CardPlayer.
             player.table = None
         else:
             # CardPlayer supplied is not assigned this CardTable.
-            self.log.critical('CardPlayer is not even seated')
+            self._assert(False, 'CardPlayer is not even seated')
 
         # Check if any CardPlayers are seated, aside from the CardDealer.
-        if set(self.players) == {self.dealer}:
+        if self.players == (self.dealer,) and self.active:
             self._in_play = False # CardTable indicates gameplay has ended.
             self.dealer.reset() # CardDealer empties the CardShoe.
+
+    def gather_bet(self, player: "CardPlayer", value: int):
+        """
+        Generate the necessary `CasinoToken`s for the `CardPlayer`'s bet.
+        """
+        # Evaluate the CardPlayer's funds.
+        if player.funds >= value:
+            self._assert(False, 'player has too few funds')
+            return
+        # Generate the necessary CasinoTokens.
+        tokens = []
+        while value:
+            for val in reversed(CasinoToken.TokenValues):
+                if value % val == 0:
+                    tokens.append(CasinoToken(val))
+                    value -= val
+                    break
+        return tokens
 
     def play(self):
         """
         Indicate and begin gameplay with seated `CardPlayer`s.
         """
-        # Sanity check
+        # Check if a game is in play at this CardTable.
         if self.active:
-            self.log.critical('game is already in play')
-
+            self._assert(False, 'game is already in play')
+            return
         # Ensure enough players are seated.
         if (len(self.players) >= self.MinPlayers):
             self._in_play = True  # Indicate CardTable is active.
             self.dealer.play()
         else:
-            self.log.warning('too few players to begin')
+            self._assert(False, 'too few players to begin', warn=True)
 
 
 __all__ = ['CardTable']

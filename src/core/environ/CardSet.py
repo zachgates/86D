@@ -1,17 +1,17 @@
 from dataclasses import *
 from typing import *
 
-from .. import GameObject
+from .. import gameclass, GameObject
 from . import PlayingCard
 
 
-@dataclass(repr=False)
+@gameclass
 class CardSet(GameObject):
     """
     A dataclass representing any collection of `PlayingCard`s.
     """
 
-    _cards: List[PlayingCard] = field(default_factory=list)
+    _cards: List[PlayingCard]
 
     def __str__(self):
         str_ = str(tuple(str(card) for card in self.cards))

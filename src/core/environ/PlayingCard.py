@@ -1,9 +1,9 @@
 from dataclasses import *
 
-from .. import GameObject
+from .. import gameclass, GameObject
 
 
-@dataclass(repr=False)
+@gameclass
 class PlayingCard(GameObject):
     """
     A dataclass representing a single `PlayingCard` in a `CardDeck`.
@@ -21,6 +21,9 @@ class PlayingCard(GameObject):
     hand: "CardHand" = None # Points to the (optional) PlayingCard's CardHand
     up: bool = False # Indicates an "upcard" (face-up)
 
+    def __hash__(self):
+        return hash((self.rank, self.suit))
+
     def __str__(self):
         if self.up:
             return '<%s of %s>' % (
@@ -28,12 +31,6 @@ class PlayingCard(GameObject):
                 self.SuitNames[self.suit])
         else:
             return '<***>'
-
-    def __eq__(self, other):
-        """
-        Compare `PlayingCard`s by their rank and suit.
-        """
-        return (self.rank, self.suit) == (other.rank, other.suit)
 
     @property
     def score(self):

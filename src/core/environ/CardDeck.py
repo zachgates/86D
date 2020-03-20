@@ -1,10 +1,11 @@
 from dataclasses import *
 from typing import *
 
+from .. import gameclass
 from . import PlayingCard, CardSet
 
 
-@dataclass(repr=False)
+@gameclass
 class CardDeck(CardSet):
     """
     A dataclass representing an entire `CardDeck` of `PlayingCard`s.

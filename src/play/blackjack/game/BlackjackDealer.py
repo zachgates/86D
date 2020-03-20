@@ -1,7 +1,10 @@
-from ....core import CardDealer
+from dataclasses import *
+
+from ....core import gameclass, CardDealer
 from . import BlackjackHand
 
 
+@gameclass
 class BlackjackDealer(CardDealer):
 
     def load(self):

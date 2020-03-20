@@ -1,22 +1,25 @@
+from dataclasses import *
 from typing import *
 
-from .. import PlayingCard, CardShoe, CardTable
+from .. import gameclass, PlayingCard, CardShoe
 from . import CardHand, CardPlayer
 
 
+@gameclass
 class CardDealer(CardPlayer):
     """
     Deals cards from a special device called a "dealer's shoe".
     """
 
-    def __init__(self, table: CardTable):
+    _shoe: CardShoe = CardShoe()
+    _drawn: List[PlayingCard] = field(default_factory=list)
+
+    def __init__(self, table: "CardTable"):
         """
         Initialize the `CardDealer` with an empty `CardShoe` and empty "drawn
         record". Assign them a `CardTable`.
         """
         super().__init__()
-        self.__shoe: CardShoe = CardShoe()
-        self.__drawn: List[PlayingCard] = []
         self.table = table
 
     @property
@@ -24,7 +27,7 @@ class CardDealer(CardPlayer):
         """
         Property pointing to `PlayingCard`s in the `CardDealer`'s `CardShoe`.
         """
-        return tuple(self.__shoe.cards)
+        return tuple(self._shoe.cards)
 
     def play(self):
         """
@@ -40,14 +43,14 @@ class CardDealer(CardPlayer):
         """
         `CardDealer` loads the `CardShoe` with N `CardDeck`s; default is one.
         """
-        self.__shoe.load(n_decks)
+        self._shoe.load(n_decks)
         self.log.debug('loaded (%i) CardDecks into the CardShoe' % n_decks)
 
     def shuffle(self):
         """
         `CardDealer` shuffles the `PlayingCard`s in the `CardShoe`.
         """
-        self.__shoe.shuffle()
+        self._shoe.shuffle()
         self.log.debug('shuffled')
 
     def draw(self, reveal: bool = False, n_cards: int = 1) -> PlayingCard:
@@ -58,8 +61,8 @@ class CardDealer(CardPlayer):
         Keyword arguments:
         reveal -- a boolean representing whether the `PlayingCard` is face-up
         """
-        card = self.__shoe.draw() # Draw a PlayingCard from the CardShoe.
-        self.__drawn.append(card) # Add it to the "drawn record".
+        card = self._shoe.draw() # Draw a PlayingCard from the CardShoe.
+        self._drawn.append(card) # Add it to the "drawn record".
         card.up = reveal
         self.log.debug('draw->%r' % card)
         return card
@@ -81,31 +84,23 @@ class CardDealer(CardPlayer):
         # Remove the supplied PlayingCard from the "drawn record".
         if card:
             # Verify the supplied PlayingCard is in the "drawn record".
-            if card not in self.__drawn:
-                self.log.warning('PlayingCard was drawn; not by me')
-                return
-            else:
-                card.discard()
-                self.__drawn.remove(card)
-                self.__shoe.discard(card)
+            self._assert(card in self._drawn, '%r not drawn by me' % card)
+            card.discard()
+            self._drawn.remove(card)
+            self._shoe.discard(card)
         # No PlayingCard supplied to discard.
         else:
             # Ensure n_cards is set if no card was supplied.
-            if n_cards == 0:
-                self.log.warning('no card supplied assumes n_cards != 0')
-                return
+            self._assert(n_cards, 'no card supplied assumes n_cards != 0')
             # Discard any number, N, PlayingCards from the CardShoe.
             cards = []
             while n_cards > 0:
                 # Attempt to draw a PlayingCard from the CardShoe.
                 card = self.draw()
-                if card is None:
-                    # Too few PlayingCards in CardShoe to complete the action.
-                    self.log.error('not enough PlayingCards in the CardShoe')
-                else:
-                    # Success. Submit for discard.
-                    cards.append(card)
-                    n_cards -= 1
+                # Check if enough PlayingCards in CardShoe to complete action.
+                self._assert(card, 'not enough PlayingCards in CardShoe')
+                cards.append(card)
+                n_cards -= 1
             else:
                 if n_cards < 0:
                     # Discard all remaining PlayingCards in the CardShoe.
@@ -145,12 +140,12 @@ class CardDealer(CardPlayer):
         """
         # Discard any PlayingCards the CardDealer may hold.
         self.discard(hands=self.hands)
-        # Register how many remaining PlayingCards were discarded.
+        # Register how many remaining PlayingCards will be discarded.
         n_cards = len(self.deck)
         # Discard any PlayingCards held by CardPlayers, and remaining CardDeck.
-        self.discard(cards=tuple(self.__drawn), n_cards=-1)
+        self.discard(cards=tuple(self._drawn), n_cards=-1)
         # Reset the "drawn record".
-        self.__drawn = []
+        self._drawn = []
         self.log.debug('discarded (%i) PlayingCards from CardShoe.' % n_cards)
 
     def hit(self, player: CardPlayer, hand_ord: int = 0, reveal: bool = False):
@@ -195,4 +190,4 @@ class CardDealer(CardPlayer):
             hand.player.log.info('losing hand: %s' % hand)
 
 
-__all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer', 'CardTable']
+__all__ = ['CardDealer', 'PlayingCard', 'CardHand', 'CardPlayer']
