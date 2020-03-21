@@ -1,15 +1,4 @@
-import logging
-
-from dataclasses import dataclass
-
-from ... import LOG_TRACE
-
-
-def gameclass(cls):
-    """
-    A decorator for `GameObject` dataclasses.
-    """
-    return dataclass(repr=False, eq=False)(cls)
+from . import gameclass
 
 
 class _GameObject(type):
@@ -26,7 +15,7 @@ class _GameObject(type):
             '__eq__': _GameObject.__eq__
         })
         cls = super().__new__(cls, name, bases, dct)
-        cls.log = logging.getLogger(name)
+        cls.log = App.log.getChild(name)
         cls.count = 0
         return cls
 
@@ -52,7 +41,7 @@ class GameObject(object, metaclass=_GameObject):
         """
         self = super().__new__(cls)
         self.count = cls.count
-        self.log = logging.getLogger().getChild(repr(self))
+        self.log = App.log.getChild(repr(self))
         self.log.debug('generated.')
         cls.count += 1
         return self
@@ -84,4 +73,4 @@ class GameObject(object, metaclass=_GameObject):
                 raise e
 
 
-__all__ = ['gameclass', 'GameObject']
+__all__ = ['GameObject']

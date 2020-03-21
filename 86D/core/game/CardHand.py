@@ -1,5 +1,5 @@
-from dataclasses import *
-from typing import *
+from dataclasses import field
+from typing import List
 
 from .. import gameclass, GameObject, PlayingCard, CardSet
 from . import CasinoToken

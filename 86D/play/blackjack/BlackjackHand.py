@@ -1,5 +1,3 @@
-from dataclasses import *
-
 from ...core import gameclass, CardHand
 
 

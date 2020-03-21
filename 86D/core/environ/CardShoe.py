@@ -1,7 +1,7 @@
 import random
 
-from dataclasses import *
-from typing import *
+from dataclasses import field
+from typing import List, Optional
 
 from .. import gameclass, GameObject
 from . import PlayingCard, CardSet, CardDeck

@@ -1,5 +1,3 @@
-from dataclasses import *
-
 from .. import gameclass, GameObject
 
 
