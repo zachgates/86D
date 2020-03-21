@@ -1,9 +1,6 @@
 import builtins
 
-from .Settings import Settings
-from .App import App
-from . import core
-from . import play
+from .settings import Settings
 
 
-__all__ = ['Settings', 'App', 'core', 'play']
+__all__ = ['Settings', 'core', 'play']

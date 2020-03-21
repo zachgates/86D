@@ -15,7 +15,7 @@ class _GameObject(type):
             '__eq__': _GameObject.__eq__
         })
         cls = super().__new__(cls, name, bases, dct)
-        cls.log = App.log.getChild(name)
+        cls.log = Log.getChild(name)
         cls.count = 0
         return cls
 
@@ -41,7 +41,7 @@ class GameObject(object, metaclass=_GameObject):
         """
         self = super().__new__(cls)
         self.count = cls.count
-        self.log = App.log.getChild(repr(self))
+        self.log = Log.getChild(repr(self))
         self.log.debug('generated.')
         cls.count += 1
         return self
