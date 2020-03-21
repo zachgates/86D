@@ -20,7 +20,7 @@ class CardDeck(CardSet):
                 for rank in PlayingCard.RankRange \
                 for suit in PlayingCard.SuitRange]
 
-    _cards: List[PlayingCard] = field(default_factory=deck_factory)
+    cards: List[PlayingCard] = field(default_factory=deck_factory)
 
     def __post_init__(self):
         """

@@ -3,6 +3,7 @@ from typing import List
 from dataclasses import dataclass, field
 
 from .. import gameclass, GameObject
+from . import CardPlayer, CardDealer, CardHand
 
 
 @gameclass
@@ -11,23 +12,28 @@ class CardGame(GameObject):
     A dataclass representing a single game.
     """
 
-    dealer: "CardDealer"
-    players: List["CardPlayer"] = field(default_factory=list)
-    active: bool = False
+    dealer: CardDealer
+    players: List[CardPlayer] = field(default_factory=list)
 
-    def add_player(self, player: "CardPlayer"):
+    def __post_init__(self):
+        self._in_play = False
+
+    @property
+    def active(self):
+        return (self.players and self._in_play)
+
+    def add_player(self, player: CardPlayer):
         self.players.append(player)
-        player.hands = self.dealer.HandType.gen(player)
+        player.hands = [self.dealer.HandType([], player)]
 
-    def remove_player(self, player: "CardPlayer"):
+    def remove_player(self, player: CardPlayer):
         self.log.debug('remove_player(%r)' % player)
         self.dealer.discard(player)
         player.hands = []
         self.players.remove(player)
-        self.active = bool(self.players)
 
     def play(self):
-        # Check if a game is in play at this CardTable.
+        # Check if this CardGame is already in play.
         if self.active:
             self._assert(False, 'game is already in play.')
             return
@@ -35,8 +41,36 @@ class CardGame(GameObject):
         self._assert(self.players, 'no players.', warn=True)
         # Start the CardGame.
         self.log.info('play()')
-        self.active = True
+        self._in_play = True
         self.dealer.load()
         self.dealer.shuffle()
         self.dealer.deal()
         ...
+
+    def win(self, hand: CardHand, player: CardPlayer = None):
+        """
+        Contains the logic for winning a `hand`. If no `hand` is supplied, then
+        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
+        are assumed to have won.
+        """
+        if player is not None:
+            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
+            for hand in player.hands:
+                self.win(hand)
+        else:
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
+            hand.player.log.info('winning hand: %s.' % hand)
+
+    def lose(self, hand: CardHand, player: CardPlayer = None):
+        """
+        Contains the logic for losing a `hand`. If no `hand` is supplied, then
+        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
+        are assumed to have lost.
+        """
+        if player is not None:
+            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
+            for hand in player.hands:
+                self.lose(hand)
+        else:
+            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
+            hand.player.log.info('losing hand: %s.' % hand)

@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import List
 
-from .. import gameclass, PlayingCard, CardShoe
+from .. import gameclass, PlayingCard
 from . import CardHand, CardPlayer
 
 
@@ -13,34 +13,32 @@ class CardDealer(CardPlayer):
 
     HandType = CardHand
 
-    _shoe: CardShoe = CardShoe()
-    _drawn: List[PlayingCard] = field(default_factory=list)
-
     def __post_init__(self):
         """
         Initialize the `CardDealer` with an empty `CardHand`.
         """
-        self._hands = self.HandType.gen(self)
+        self._drawn = []
+        self.hands = [self.HandType([], self)]
 
     @property
     def deck(self):
         """
         Property pointing to `PlayingCard`s in the `CardDealer`'s `CardShoe`.
         """
-        return tuple(self._shoe.cards)
+        return tuple(self.table.shoe.cards)
 
     def load(self, n_decks: int = 1):
         """
         `CardDealer` loads the `CardShoe` with N `CardDeck`s; default is one.
         """
-        self._shoe.load(n_decks)
+        self.table.shoe.load(n_decks)
         self.log.debug('loaded (%i) CardDecks into the CardShoe.' % n_decks)
 
     def shuffle(self):
         """
         `CardDealer` shuffles the `PlayingCard`s in the `CardShoe`.
         """
-        self._shoe.shuffle()
+        self.table.shoe.shuffle()
         self.log.debug('shuffled.')
 
     def draw(self, reveal: bool = False, n_cards: int = 1) -> PlayingCard:
@@ -51,7 +49,7 @@ class CardDealer(CardPlayer):
         Keyword arguments:
         reveal -- a boolean representing whether the `PlayingCard` is face-up
         """
-        card = self._shoe.draw() # Draw a PlayingCard from the CardShoe.
+        card = self.table.shoe.draw() # Draw a PlayingCard from the CardShoe.
         self._drawn.append(card) # Add it to the "drawn record".
         card.up = reveal
         self.log.debug('draw() -> %r' % card)
@@ -79,7 +77,7 @@ class CardDealer(CardPlayer):
             self._assert(card in self._drawn, '%r not drawn by me.' % card)
             card.discard()
             self._drawn.remove(card)
-            self._shoe.discard(card)
+            self.table.shoe.discard(card)
         # No PlayingCard supplied to discard.
         else:
             # Ensure n_cards is set if no card was supplied.
@@ -157,35 +155,7 @@ class CardDealer(CardPlayer):
         card = self.draw(reveal)
         hand = player.hand(hand_ord)
         hand.add(card)
-        self.log.info('%r.add(%s)' % (hand, card))
-
-    def win(self, hand: CardHand, player: CardPlayer = None):
-        """
-        Contains the logic for winning a `hand`. If no `hand` is supplied, then
-        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
-        are assumed to have won.
-        """
-        if player is not None:
-            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
-            for hand in player.hands:
-                self.win(hand)
-        else:
-            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
-            hand.player.log.info('winning hand: %s.' % hand)
-
-    def lose(self, hand: CardHand, player: CardPlayer = None):
-        """
-        Contains the logic for losing a `hand`. If no `hand` is supplied, then
-        a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
-        are assumed to have lost.
-        """
-        if player is not None:
-            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer.')
-            for hand in player.hands:
-                self.lose(hand)
-        else:
-            self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
-            hand.player.log.info('losing hand: %s.' % hand)
+        player.log.info('hand(%i).add(%s)' % (hand_ord, card))
 
 
 __all__ = ['CardDealer']

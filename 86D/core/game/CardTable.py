@@ -1,8 +1,8 @@
 from dataclasses import field
 from typing import List
 
-from .. import gameclass, GameObject
-from . import CasinoToken, CardGame, CardDealer
+from .. import gameclass, GameObject, CardShoe
+from . import CasinoToken, CardGame, CardPlayer, CardDealer
 
 
 @gameclass
@@ -13,19 +13,24 @@ class CardTable(GameObject):
 
     game_type: type
     dealer_type: type
-    _waiting: List["CardPlayer"] = field(default_factory=list)
+    waiting: List[CardPlayer] = field(default_factory=list)
 
     def __post_init__(self):
         """
         Create and assign the `CardTable`'s `CardDealer`.
         """
-        self._assert(issubclass(self.dealer_type, CardDealer),
-                    'game_type must be subclass of CardGame.')
+        # Create the CardShoe.
+        self.shoe = CardShoe()
+        # Create the CardDealer.
         self._assert(issubclass(self.dealer_type, CardDealer),
                     'dealer_type must be CardDealer or subclass.')
         dealer = self.dealer_type()
         dealer.table = self
+        # Create the CardGame.
+        self._assert(issubclass(self.game_type, CardGame),
+                    'game_type must be subclass of CardGame.')
         self.game = self.game_type(dealer)
+        self.log.info('generated %r with %r.' % (self.game, dealer))
 
     @property
     def dealer(self):
@@ -49,16 +54,9 @@ class CardTable(GameObject):
         `CardTable`'s `CardDealer`, the "player record" of `CardPlayer`'s,
         and the "waiting players record" of `CardPlayer`s, in that order.
         """
-        return self.players + tuple(self._waiting)
+        return self.players + tuple(self.waiting)
 
-    @property
-    def active(self):
-        """
-        Property getter: Indicates whether the `CardGame` is in play.
-        """
-        return self.game.active
-
-    def add_player(self, player: "CardPlayer"):
+    def add_player(self, player: CardPlayer):
         """
         Try to seat a `CardPlayer` at this `CardTable`.
         """
@@ -67,7 +65,7 @@ class CardTable(GameObject):
 
         # If gameplay has begun, seat the CardPlayer, but as "waiting".
         if self.game.active:
-            self._waiting.append(player)
+            self.waiting.append(player)
             player.waiting = True
         # If no game is in play, add the CardPlayer to the "player record".
         else:
@@ -77,16 +75,16 @@ class CardTable(GameObject):
         # Assign this CardTable to the CardPlayer.
         player.table = self
 
-    def remove_player(self, player: "CardPlayer"):
+    def remove_player(self, player: CardPlayer):
         """
         Remove a seated `CardPlayer` from this `CardTable`.
         """
         if player in self.game.players:
             self.game.remove_player(player)
             player.table = None
-        elif player in self._waiting:
+        elif player in self.waiting:
             self.log.debug('%r stopped waiting.' % player)
-            self._waiting.remove(player)
+            self.waiting.remove(player)
         else:
             self._assert(False, 'CardPlayer not even seated.')
 
@@ -94,7 +92,7 @@ class CardTable(GameObject):
         if not self.game.active:
             self.dealer.reset() # CardDealer empties the CardShoe.
 
-    def gather_bet(self, player: "CardPlayer", value: int):
+    def gather_bet(self, player: CardPlayer, value: int):
         """
         Generate the necessary `CasinoToken`s for the `CardPlayer`'s bet.
         """
@@ -105,7 +103,7 @@ class CardTable(GameObject):
             return
         # Generate the necessary CasinoTokens.
         self.log.info('generating ($%i) in CasinoTokens.' % value)
-        player._funds -= value
+        player.funds -= value
         tokens = []
         # Decompose the bet value.
         while value:

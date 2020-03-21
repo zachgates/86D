@@ -8,8 +8,8 @@ class BlackjackDealer(CardDealer):
     HandType = BlackjackHand
 
     def load(self):
-        # Load the CardShoe with N-1 decks where N is the number of CardPlayers
-        super().load(len(self.table.game.players) - 1)
+        # Load the CardShoe with N decks where N is the number of CardPlayers.
+        super().load(len(self.table.game.players))
 
     def deal(self):
         # First round deal
@@ -24,7 +24,7 @@ class BlackjackDealer(CardDealer):
     def insurance(self):
         # CardDealer is showing an ace.
         if self.hand(0).cards[1].rank == 0:
-            # TODO: Ask CardPlayers for insurance bets
+            # TODO: Ask CardPlayers for insurance bets.
             self.log.info('showing an ace; accepting insurance bets.')
             # Reveal CardDealer's hand.
             self.hand(0).up = True

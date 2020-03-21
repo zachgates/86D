@@ -14,11 +14,9 @@ class BlackjackHand(CardHand):
         """
         Property getter: Points to whether a `BlackjackHand` is a blackjack.
         """
-        if len(self.cards) == 2: # Contains: two cards,
-            if any(card.rank == 0 for card in self.cards): # Ace,
-                if any(card.rank >= 9 for card in self.cards): # Rank 10;
-                    return True # Blackjack!
-        return False
+        return (len(self.cards) == 2 # Contains two cards:
+                and any(card.rank == 0 for card in self.cards) # Ace
+                and any(card.score == 10 for card in self.cards)) # "10"
 
 
 __all__ = ['BlackjackHand']

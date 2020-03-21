@@ -40,8 +40,8 @@ class App(object):
     def run(self):
         from .core import CardTable, CardPlayer
         from .play.blackjack import BlackjackGame, BlackjackDealer
-        p1 = CardPlayer(_funds=5000)
-        p2 = CardPlayer(_funds=5000)
+        p1 = CardPlayer(funds=5000)
+        p2 = CardPlayer(funds=5000)
         t = CardTable(BlackjackGame, BlackjackDealer)
         t.add_player(p1)
         t.add_player(p2)

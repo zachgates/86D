@@ -10,7 +10,7 @@ class CardSet(GameObject):
     A dataclass representing any collection of `PlayingCard`s.
     """
 
-    _cards: List[PlayingCard]
+    cards: List[PlayingCard]
 
     def __eq__(self, other):
         return set(self.cards) == set(other.cards)
@@ -22,13 +22,6 @@ class CardSet(GameObject):
         str_ = str(tuple(str(card) for card in self.cards))
         str_ = str_.replace("'", '')
         return str_
-
-    @property
-    def cards(self):
-        """
-        Property getter: Returns a `tuple` containing all `PlayingCard`s.
-        """
-        return tuple(self._cards)
 
     @property
     def empty(self):
@@ -59,7 +52,7 @@ class CardSet(GameObject):
         Add a `PlayingCard` to the `CardHand`.
         """
         self._assert(isinstance(card, PlayingCard), 'card not a PlayingCard.')
-        self._cards.append(card)
+        self.cards.append(card)
         card.hand = self # Reference this CardHand from the PlayingCard.
         self.log.debug('add(%r)' % card)
 
@@ -73,7 +66,7 @@ class CardSet(GameObject):
             self._assert((card in self.cards), 'supplied card not in CardHand.')
             # Discard the supplied PlayingCard from the CardHand.
             card.hand = None # Unassign a CardHand.
-            self._cards.remove(card)
+            self.cards.remove(card)
             self.log.debug('discard(%r)' % card)
         else:
             # Discard all PlayingCards from the CardHand.

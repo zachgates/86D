@@ -14,36 +14,23 @@ class CardShoe(CardSet):
     Cards are dealt one at a time from the shoe.
     """
 
-    _cards: List[PlayingCard] = field(default_factory=list)
-    _discards: List[PlayingCard] = field(default_factory=list)
-
-    @property
-    def decks(self):
-        """
-        Property getter: Returns a tuple of the `CardDeck`s in the `CardShoe`.
-        """
-        return tuple(set(card.deck for card in self.cards))
-
-    @property
-    def discards(self) -> tuple:
-        """
-        Property getter: Points to all discarded `PlayingCard`s.
-        """
-        return tuple(self._discards)
+    cards: List[PlayingCard] = field(default_factory=list)
+    discards: List[PlayingCard] = field(default_factory=list)
 
     def load(self, n_decks: int = 0) -> None:
         """
         Load the `CardShoe` with any number, N, `CardDeck`s.
         """
+        self.log.debug('loading with (%i) CardDecks.' % n_decks)
         for _ in range(n_decks):
-            self._cards += CardDeck().cards
+            self.cards += CardDeck().cards
 
     def reload(self) -> None:
         """
         Move any discarded `PlayingCard`s back into the CardShoe.
         """
-        self._cards.extend(self._discards)
-        self._discards = []
+        self.cards.extend(self.discards)
+        self.discards = []
         self.log.debug('reloaded.')
 
     def shuffle(self, n_repeat: int = 1) -> None:
@@ -54,7 +41,7 @@ class CardShoe(CardSet):
         n_repeat -- Integer representing the number of times, N, to shuffle.
         """
         for _ in range(n_repeat): # Repeat shuffle any, N, times.
-            random.shuffle(self._cards)
+            random.shuffle(self.cards)
 
     def draw(self) -> Optional[PlayingCard]:
         """
@@ -64,13 +51,13 @@ class CardShoe(CardSet):
             self._assert(False, 'the CardShoe is empty.', warn=True)
             return None
         else:
-            return self._cards.pop() # Draw a PlayingCard.
+            return self.cards.pop() # Draw a PlayingCard.
 
     def discard(self, card: PlayingCard) -> None:
         """
         Discard a `PlayingCard` handed to `CardDealer`.
         """
-        self._discards.append(card)
+        self.discards.append(card)
 
 
 __all__ = ['CardShoe']
