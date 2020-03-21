@@ -3,7 +3,7 @@ import logging
 
 from dataclasses import dataclass
 
-from . import Settings
+from . import __name__, Settings
 
 
 @dataclass
@@ -12,7 +12,7 @@ class App(object):
     Dataclass representing the application itself.
     """
 
-    log: logging.Logger = logging.getLogger()
+    log: logging.Logger = logging.getLogger(__name__)
     settings: Settings = Settings
 
     def __post_init__(self):
@@ -30,6 +30,8 @@ class App(object):
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
             self.log.addHandler(console_handler)
+        # Notify
+        self.log.info('starting.')
 
 
 builtins.App = App = App()
