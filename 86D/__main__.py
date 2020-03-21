@@ -1,6 +1,6 @@
 if __name__ == '__main__':
     from .core import CardTable, CardPlayer
-    from .play import BlackjackDealer
+    from .play.blackjack import BlackjackDealer
     p1 = CardPlayer(_funds=5000)
     p2 = CardPlayer(_funds=5000)
     t = CardTable(BlackjackDealer)
