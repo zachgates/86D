@@ -37,7 +37,6 @@ class CardDealer(CardPlayer):
         self.load()
         self.shuffle()
         self.deal()
-        ...
 
     def load(self, n_decks: int = 1):
         """
@@ -72,7 +71,6 @@ class CardDealer(CardPlayer):
         Implement deal logic in a subclass.
         """
         self._assert(False, 'deal logic should be implemented in subclass.')
-        ...
 
     def __discard(self, card: PlayingCard = None, n_cards: int = 0):
         """
