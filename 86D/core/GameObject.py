@@ -67,9 +67,9 @@ class GameObject(object, metaclass=_GameObject):
             assert cond, msg
         except AssertionError as e:
             if warn:
-                self.log.warning(e, stack_info=LOG_TRACE)
+                self.log.warning(e, stack_info=Settings.LOG_TRACE)
             else:
-                self.log.error(e, stack_info=LOG_TRACE)
+                self.log.error(e, stack_info=Settings.LOG_TRACE)
                 raise e
 
 

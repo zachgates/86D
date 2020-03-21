@@ -29,15 +29,6 @@ class CardDealer(CardPlayer):
         """
         return tuple(self._shoe.cards)
 
-    def play(self):
-        """
-        `CardDealer` loads the `CardShoe`, shuffles, and deals. Additional
-        gameplay logic should be defined in the `_play` method.
-        """
-        self.load()
-        self.shuffle()
-        self.deal()
-
     def load(self, n_decks: int = 1):
         """
         `CardDealer` loads the `CardShoe` with N `CardDeck`s; default is one.
@@ -115,7 +106,7 @@ class CardDealer(CardPlayer):
                 self.discard(cards=cards)
 
     def discard(self,
-                hands: List[CardHand] = [],
+                player: CardPlayer = None,
                 cards: List[PlayingCard] = [],
                 n_cards: int = 0):
         """
@@ -124,14 +115,16 @@ class CardDealer(CardPlayer):
         are discarded.
 
         Keyword arguments:
-        hands -- a list of `CardHand`s
+        player -- a `CardPlayer` of who's `CardHand`s to dicard
         cards -- a list of `PlayingCard`s
         n_cards -- an integer representing any number of `PlayingCard`s
         """
-        # Discard CardHands handed to the CardDealer.
-        for hand in hands:
-            self.log.debug('discard(%r)' % hand)
-            self.discard(cards=hand.cards)
+        # Discard any CardHands a CardPlayer holds.
+        if player:
+            self._assert(isinstance(player, CardPlayer), 'player not a CardPlayer')
+            for hand in player.hands:
+                self.log.debug('discard(%r)' % hand)
+                self.discard(cards=hand.cards)
         # Discard PlayingCards handed to the CardDealer.
         for card in cards:
             self.__discard(card=card)
@@ -144,7 +137,7 @@ class CardDealer(CardPlayer):
         Discard old `CardDeck`s.
         """
         # Discard any PlayingCards the CardDealer may hold.
-        self.discard(hands=self.hands)
+        self.discard(player=self)
         # Register how many remaining PlayingCards will be discarded.
         n_cards = len(self.deck)
         # Discard any PlayingCards held by CardPlayers, and remaining CardDeck.

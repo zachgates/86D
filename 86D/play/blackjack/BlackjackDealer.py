@@ -9,11 +9,7 @@ class BlackjackDealer(CardDealer):
 
     def load(self):
         # Load the CardShoe with N-1 decks where N is the number of CardPlayers
-        super().load(len(self.table.players) - 1)
-
-    def play(self):
-        super().play()
-        self.insurance()
+        super().load(len(self.table.game.players) - 1)
 
     def deal(self):
         # First round deal

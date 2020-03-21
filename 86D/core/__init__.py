@@ -8,10 +8,10 @@ def gameclass(cls):
 
 from .GameObject import GameObject
 from .environ import PlayingCard, CardSet, CardDeck, CardShoe
-from .game import CasinoToken, CardHand, CardPlayer, CardDealer, CardTable
+from .game import CasinoToken, CardGame, CardHand, CardPlayer, CardDealer, CardTable
 
 
 __all__ = ['gameclass',
            'GameObject',
            'PlayingCard', 'CardSet', 'CardDeck', 'CardShoe',
-           'CasinoToken', 'CardHand', 'CardPlayer', 'CardDealer', 'CardTable']
+           'CasinoToken', 'CardGame', 'CardHand', 'CardPlayer', 'CardDealer', 'CardTable']
