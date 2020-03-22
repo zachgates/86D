@@ -12,4 +12,4 @@ A virtual casino.
 * Use the `-q` option to suppress console output.
 * Use the options `-l` and `-s` to set the log level and format, respectively.
 * Use the `-t` option to include tracebacks in the log.
-* Use the `-x` option to suppress `GameObject`'s creation debug messages.
+* Use the `-x` option to enable debug messages tracking `GameObject` creation.

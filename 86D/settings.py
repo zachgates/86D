@@ -6,7 +6,7 @@ from . import __name__
 
 
 @dataclass
-class _(object):
+class _settings(object):
     """
     A dataclass representing the application settings.
     """
@@ -17,7 +17,7 @@ class _(object):
     LOG_TRACE: bool = False
     LOG_QUIET: bool = False
     LOG_CACHE: bool = False
-    LOG_NOGEN: bool = False
+    LOG_TRACK: bool = False
 
     def __post_init__(self):
         # Update Settings with command-line arguments.
@@ -38,9 +38,9 @@ class _(object):
         p.add_argument('-t', '--trace', action='store_true')
         p.add_argument('-q', '--quiet', action='store_true')
         p.add_argument('-c', '--cache', action='store_true')
-        p.add_argument('-x', '--nogen', action='store_true')
+        p.add_argument('-x', '--track', action='store_true')
         return p.parse_args()
 
 
-SETTINGS = _()
+SETTINGS = _settings()
 __all__ = ['SETTINGS']
