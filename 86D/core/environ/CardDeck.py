@@ -28,7 +28,6 @@ class CardDeck(CardSet):
         """
         for card in self.cards:
             card.deck = self
-        self.log.debug('generated (52) cards.')
 
 
 __all__ = ['CardDeck']

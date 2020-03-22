@@ -60,6 +60,7 @@ class CardTable(GameObject):
         """
         Try to seat a `CardPlayer` at this `CardTable`.
         """
+        self.log.debug('%r joining.' % player)
         # Check for empty seats
         self._assert(len(self.seated) < self.MaxPlayers, 'no seats available.')
 
@@ -67,6 +68,7 @@ class CardTable(GameObject):
         if self.game.active:
             self.waiting.append(player)
             player.waiting = True
+            self.log.debug('%r waiting to play.' % player)
         # If no game is in play, add the CardPlayer to the "player record".
         else:
             player.waiting = False
@@ -79,6 +81,7 @@ class CardTable(GameObject):
         """
         Remove a seated `CardPlayer` from this `CardTable`.
         """
+        self.log.debug('%r leaving.' % player)
         if player in self.game.players:
             self.game.remove_player(player)
             player.table = None
@@ -90,7 +93,7 @@ class CardTable(GameObject):
 
         # Check if any CardPlayers are seated, aside from the CardDealer.
         if not self.game.active:
-            self.dealer.reset() # CardDealer empties the CardShoe.
+            self.game.cleanup()
 
     def gather_bet(self, player: CardPlayer, value: int):
         """
@@ -102,7 +105,7 @@ class CardTable(GameObject):
                                 % (player, value), warn=True)
             return
         # Generate the necessary CasinoTokens.
-        self.log.info('generating ($%i) in CasinoTokens.' % value)
+        self.log.info('generating ($%i) in CasinoTokens for %r.' % (value, player))
         player.funds -= value
         tokens = []
         # Decompose the bet value.

@@ -21,7 +21,7 @@ class CardShoe(CardSet):
         """
         Load the `CardShoe` with any number, N, `CardDeck`s.
         """
-        self.log.debug('loading with (%i) CardDecks.' % n_decks)
+        self.log.debug('load(n_decks=%i)' % n_decks)
         for _ in range(n_decks):
             self.cards += CardDeck().cards
 

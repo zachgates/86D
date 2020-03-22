@@ -23,11 +23,12 @@ class CardGame(GameObject):
         return (self.players and self._in_play)
 
     def add_player(self, player: CardPlayer):
+        self.log.info('%r joined.' % player)
         self.players.append(player)
         player.hands = [self.dealer.HandType([], player)]
 
     def remove_player(self, player: CardPlayer):
-        self.log.debug('remove_player(%r)' % player)
+        self.log.info('%r quit.' % player)
         self.dealer.discard(player)
         player.hands = []
         self.players.remove(player)
@@ -40,7 +41,7 @@ class CardGame(GameObject):
         # Ensure enough players are seated.
         self._assert(self.players, 'no players.', warn=True)
         # Start the CardGame.
-        self.log.info('play()')
+        self.log.info('starting.')
         self._in_play = True
         self.dealer.load()
         self.dealer.shuffle()
@@ -74,3 +75,10 @@ class CardGame(GameObject):
         else:
             self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
             hand.player.log.info('losing hand: %s.' % hand)
+
+    def cleanup(self):
+        """
+        Clean up a finished `CardGame`.
+        """
+        self.dealer.reset() # CardDealer empties the CardShoe.
+        self.log.info('done.')

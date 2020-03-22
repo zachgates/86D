@@ -49,30 +49,21 @@ class CardSet(GameObject):
 
     def add(self, card: PlayingCard) -> None:
         """
-        Add a `PlayingCard` to the `CardHand`.
+        Add a `PlayingCard` to the `CardSet`.
         """
         self._assert(isinstance(card, PlayingCard), 'card not a PlayingCard.')
         self.cards.append(card)
-        card.hand = self # Reference this CardHand from the PlayingCard.
         self.log.debug('add(%r)' % card)
 
-    def discard(self, card: PlayingCard = None) -> None:
+    def discard(self, card: PlayingCard) -> None:
         """
-        Discard either a single `PlayingCard` from the `CardHand`, or all
-        `PlayingCard`s from the `CardHand`, if supplied `card is None`.
+        Discard a single `PlayingCard` from the `CardSet`.
         """
-        if card:
-            # Inspect the supplied card.
-            self._assert((card in self.cards), 'supplied card not in CardHand.')
-            # Discard the supplied PlayingCard from the CardHand.
-            card.hand = None # Unassign a CardHand.
-            self.cards.remove(card)
-            self.log.debug('discard(%r)' % card)
-        else:
-            # Discard all PlayingCards from the CardHand.
-            for card in self.cards:
-                card.discard()
-            self.log.debug('discarded.')
+        # Inspect the supplied card.
+        self._assert((card in self.cards), 'supplied card not in CardSet.')
+        # Discard the supplied PlayingCard from the CardSet.
+        self.cards.remove(card)
+        self.log.debug('discard(%r)' % card)
 
 
 __all__ = ['CardSet']

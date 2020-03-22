@@ -24,7 +24,7 @@ class App(object):
         self.log.setLevel(Settings.LOG_LEVEL.upper())
         formatter = logging.Formatter(Settings.LOG_STYLE)
         # Configure a log file.
-        if Settings.LOG_STORE:
+        if Settings.LOG_FNAME is not None:
             mode = 'a' if Settings.LOG_CACHE else 'w'
             file_handler = logging.FileHandler(Settings.LOG_FNAME, mode=mode)
             file_handler.setFormatter(formatter)

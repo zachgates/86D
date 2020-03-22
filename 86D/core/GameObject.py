@@ -42,7 +42,8 @@ class GameObject(object, metaclass=_GameObject):
         self = super().__new__(cls)
         self.count = cls.count
         self.log = Log.getChild(repr(self))
-        self.log.debug('generated.')
+        if not Settings.LOG_NOGEN:
+            self.log.debug('generated.')
         cls.count += 1
         return self
 
