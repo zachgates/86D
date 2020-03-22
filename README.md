@@ -7,9 +7,9 @@ A virtual casino.
 > python3 -m 86D
 ```
 
-* Use the `-x` option to output to a log.
+* Use the `-o` option to output to a log. You may supply your own file name, or not. Default is `86D.log`.
 * Use the `-c` option to append to an existing log.
-* Use the `-o` option to specify a log file. Default is `86D.log`.
 * Use the `-q` option to suppress console output.
 * Use the options `-l` and `-s` to set the log level and format, respectively.
-* Use the option `-t` to include tracebacks in the log.
+* Use the `-t` option to include tracebacks in the log.
+* Use the `-x` option to suppress `GameObject`'s "generated." debug messages.
