@@ -1,6 +1,7 @@
-import builtins
-
-from .settings import Settings
+from .settings import SETTINGS
 
 
-__all__ = ['Settings', 'core', 'play']
+LOG = __import__('logging').getLogger(__name__)
+
+
+__all__ = ['SETTINGS', 'LOG']

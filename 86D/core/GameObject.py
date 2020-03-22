@@ -15,7 +15,7 @@ class _GameObject(type):
             '__eq__': _GameObject.__eq__
         })
         cls = super().__new__(cls, name, bases, dct)
-        cls.log = Log.getChild(name)
+        cls.log = LOG.getChild(name)
         cls.count = 0
         return dataclass(repr=False, eq=False)(cls)
 
@@ -40,8 +40,8 @@ class GameObject(object, metaclass=_GameObject):
         """
         self = super().__new__(cls)
         self.count = cls.count
-        self.log = Log.getChild(repr(self))
-        if not Settings.LOG_NOGEN:
+        self.log = LOG.getChild(repr(self))
+        if not APP.SETTINGS.LOG_NOGEN:
             self.log.debug('generated.')
         cls.count += 1
         return self
@@ -67,9 +67,9 @@ class GameObject(object, metaclass=_GameObject):
             assert cond, msg
         except AssertionError as e:
             if warn:
-                self.log.warning(e, stack_info=Settings.LOG_TRACE)
+                self.log.warning(e, stack_info=APP.SETTINGS.LOG_TRACE)
             else:
-                self.log.error(e, stack_info=Settings.LOG_TRACE)
+                self.log.error(e, stack_info=APP.SETTINGS.LOG_TRACE)
                 raise e
 
 

@@ -1,41 +1,30 @@
 import builtins
 import logging
 
-from dataclasses import dataclass
-
-from . import __name__, Settings
+from . import __name__, LOG, SETTINGS
 
 
-@dataclass
-class App(object):
-    """
-    Dataclass representing the application itself.
-    """
+class _(object):
 
-    log: logging.Logger = logging.getLogger(__name__)
-    settings: Settings = Settings
+    SETTINGS = SETTINGS
 
-    def __post_init__(self):
-        # Add environment variables.
-        builtins.App = self
-        builtins.Log = App.log
-        builtins.Settings = App.settings
+    def __init__(self):
         # Configure logging
-        self.log.setLevel(Settings.LOG_LEVEL.upper())
-        formatter = logging.Formatter(Settings.LOG_STYLE)
+        LOG.setLevel(SETTINGS.LOG_LEVEL.upper())
+        formatter = logging.Formatter(SETTINGS.LOG_STYLE)
         # Configure a log file.
-        if Settings.LOG_FNAME is not None:
-            mode = 'a' if Settings.LOG_CACHE else 'w'
-            file_handler = logging.FileHandler(Settings.LOG_FNAME, mode=mode)
+        if SETTINGS.LOG_FNAME is not None:
+            mode = 'a' if SETTINGS.LOG_CACHE else 'w'
+            file_handler = logging.FileHandler(SETTINGS.LOG_FNAME, mode=mode)
             file_handler.setFormatter(formatter)
-            Log.addHandler(file_handler)
+            LOG.addHandler(file_handler)
         # Configure the console.
-        if not Settings.LOG_QUIET:
+        if not SETTINGS.LOG_QUIET:
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
-            Log.addHandler(console_handler)
+            LOG.addHandler(console_handler)
         # Notify
-        Log.info('starting.')
+        LOG.info('starting.')
 
     def run(self):
         from .core import CardTable, CardPlayer
@@ -52,5 +41,8 @@ class App(object):
         t.remove_player(p2)
 
 
-App = App()
-App.run()
+# Environment variable.
+builtins.LOG = LOG
+builtins.APP = _()
+# Execute.
+APP.run()

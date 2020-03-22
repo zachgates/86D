@@ -6,7 +6,7 @@ from . import __name__
 
 
 @dataclass
-class Settings(object):
+class _(object):
     """
     A dataclass representing the application settings.
     """
@@ -42,5 +42,5 @@ class Settings(object):
         return p.parse_args()
 
 
-Settings = Settings()
-__all__ = ['Settings']
+SETTINGS = _()
+__all__ = ['SETTINGS']
