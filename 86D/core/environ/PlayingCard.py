@@ -1,7 +1,6 @@
-from .. import gameclass, GameObject
+from .. import GameObject
 
 
-@gameclass
 class PlayingCard(GameObject):
     """
     A dataclass representing a single `PlayingCard` in a `CardDeck`.

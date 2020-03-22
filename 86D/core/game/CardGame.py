@@ -2,18 +2,16 @@ from typing import List
 
 from dataclasses import dataclass, field
 
-from .. import gameclass, GameObject
-from . import CardPlayer, CardDealer, CardHand
+from .. import GameObject
 
 
-@gameclass
 class CardGame(GameObject):
     """
     A dataclass representing a single game.
     """
 
-    dealer: CardDealer
-    players: List[CardPlayer] = field(default_factory=list)
+    dealer: "CardDealer"
+    players: List["CardPlayer"] = field(default_factory=list)
 
     def __post_init__(self):
         self._in_play = False
@@ -22,12 +20,12 @@ class CardGame(GameObject):
     def active(self):
         return (self.players and self._in_play)
 
-    def add_player(self, player: CardPlayer):
+    def add_player(self, player: "CardPlayer"):
         self.log.info('%r joined.' % player)
         self.players.append(player)
         player.hands = [self.dealer.HandType([], player)]
 
-    def remove_player(self, player: CardPlayer):
+    def remove_player(self, player: "CardPlayer"):
         self.log.info('%r quit.' % player)
         self.dealer.discard(player)
         player.hands = []
@@ -48,7 +46,7 @@ class CardGame(GameObject):
         self.dealer.deal()
         ...
 
-    def win(self, hand: CardHand, player: CardPlayer = None):
+    def win(self, hand: "CardHand", player: "CardPlayer" = None):
         """
         Contains the logic for winning a `hand`. If no `hand` is supplied, then
         a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds
@@ -62,7 +60,7 @@ class CardGame(GameObject):
             self._assert(hand.player, 'CardHand has no assigned CardPlayer.')
             hand.player.log.info('winning hand: %s.' % hand)
 
-    def lose(self, hand: CardHand, player: CardPlayer = None):
+    def lose(self, hand: "CardHand", player: "CardPlayer" = None):
         """
         Contains the logic for losing a `hand`. If no `hand` is supplied, then
         a `player` must be supplied. `CardHand`s the supplied `CardPlayer` holds

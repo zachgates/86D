@@ -1,7 +1,6 @@
-from .. import gameclass, GameObject
+from .. import GameObject
 
 
-@gameclass
 class CasinoToken(GameObject):
     """
     A dataclass representing a single CasinoToken of a denomination.

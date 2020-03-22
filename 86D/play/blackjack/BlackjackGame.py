@@ -1,7 +1,6 @@
-from ...core import gameclass, CardGame
+from ...core import CardGame
 
 
-@gameclass
 class BlackjackGame(CardGame):
 
     def play(self):

@@ -1,8 +1,7 @@
-from ...core import gameclass, CardDealer
+from ...core import CardDealer
 from . import BlackjackHand
 
 
-@gameclass
 class BlackjackDealer(CardDealer):
 
     HandType = BlackjackHand

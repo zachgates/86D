@@ -1,10 +1,9 @@
 from typing import List
 
-from .. import gameclass, GameObject
+from .. import GameObject
 from . import PlayingCard
 
 
-@gameclass
 class CardSet(GameObject):
     """
     A dataclass representing any collection of `PlayingCard`s.

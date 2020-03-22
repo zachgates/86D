@@ -1,4 +1,4 @@
-from . import gameclass
+from dataclasses import dataclass
 
 
 class _GameObject(type):
@@ -17,7 +17,7 @@ class _GameObject(type):
         cls = super().__new__(cls, name, bases, dct)
         cls.log = Log.getChild(name)
         cls.count = 0
-        return cls
+        return dataclass(repr=False, eq=False)(cls)
 
     def __hash__(self):
         """
@@ -32,7 +32,6 @@ class _GameObject(type):
         return hash(self) == hash(other)
 
 
-@gameclass
 class GameObject(object, metaclass=_GameObject):
 
     def __new__(cls, *args, **kwargs):

@@ -1,11 +1,10 @@
 from dataclasses import field
 from typing import List
 
-from .. import gameclass, GameObject, CardShoe
-from . import CasinoToken, CardGame, CardPlayer, CardDealer
+from .. import GameObject, CardShoe
+from . import CasinoToken, CardGame, CardDealer
 
 
-@gameclass
 class CardTable(GameObject):
 
     MaxPlayers = 7 # "the usual 'full table'"
@@ -13,7 +12,7 @@ class CardTable(GameObject):
 
     game_type: type
     dealer_type: type
-    waiting: List[CardPlayer] = field(default_factory=list)
+    waiting: List["CardPlayer"] = field(default_factory=list)
 
     def __post_init__(self):
         """
@@ -56,7 +55,7 @@ class CardTable(GameObject):
         """
         return self.players + tuple(self.waiting)
 
-    def add_player(self, player: CardPlayer):
+    def add_player(self, player: "CardPlayer"):
         """
         Try to seat a `CardPlayer` at this `CardTable`.
         """
@@ -77,7 +76,7 @@ class CardTable(GameObject):
         # Assign this CardTable to the CardPlayer.
         player.table = self
 
-    def remove_player(self, player: CardPlayer):
+    def remove_player(self, player: "CardPlayer"):
         """
         Remove a seated `CardPlayer` from this `CardTable`.
         """
@@ -95,7 +94,7 @@ class CardTable(GameObject):
         if not self.game.active:
             self.game.cleanup()
 
-    def gather_bet(self, player: CardPlayer, value: int):
+    def gather_bet(self, player: "CardPlayer", value: int):
         """
         Generate the necessary `CasinoToken`s for the `CardPlayer`'s bet.
         """

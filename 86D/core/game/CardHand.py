@@ -1,10 +1,9 @@
 from typing import List
 
-from .. import gameclass, PlayingCard, CardSet
+from .. import CardSet
 from . import CardPlayer
 
 
-@gameclass
 class CardHand(CardSet):
     """
     A dataclass representing a single `CardHand` of `PlayingCard`s.
@@ -13,14 +12,14 @@ class CardHand(CardSet):
     player: CardPlayer
     bet: int = 0
 
-    def add(self, card: PlayingCard):
+    def add(self, card: "PlayingCard"):
         """
         Add a `PlayingCard` to the `CardHand`.
         """
         super().add(card)
         card.hand = self # Reference this CardHand from the PlayingCard.
 
-    def discard(self, card: PlayingCard = None):
+    def discard(self, card: "PlayingCard" = None):
         """
         Discard either a single `PlayingCard` from the `CardHand`, or all
         `PlayingCard`s from the `CardHand`, if supplied `card is None`.

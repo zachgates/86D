@@ -1,10 +1,9 @@
 from dataclasses import field
 from typing import List
 
-from .. import gameclass, GameObject
+from .. import GameObject
 
 
-@gameclass
 class CardPlayer(GameObject):
 
     table: "CardTable" = None

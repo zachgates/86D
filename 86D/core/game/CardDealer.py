@@ -1,11 +1,9 @@
 from dataclasses import field
 from typing import List
 
-from .. import gameclass, PlayingCard
 from . import CardHand, CardPlayer
 
 
-@gameclass
 class CardDealer(CardPlayer):
     """
     Deals cards from a special device called a "dealer's shoe".
@@ -41,7 +39,7 @@ class CardDealer(CardPlayer):
         self.table.shoe.shuffle()
         self.log.info('shuffled.')
 
-    def draw(self, reveal: bool = False, n_cards: int = 1) -> PlayingCard:
+    def draw(self, reveal: bool = False, n_cards: int = 1) -> "PlayingCard":
         """
         `CardDealer` draws a `PlayingCard` from the `CardShoe`, with the
         option to `reveal` the card, face-up.
@@ -61,7 +59,7 @@ class CardDealer(CardPlayer):
         """
         self._assert(False, 'deal logic should be implemented in subclass.')
 
-    def __discard(self, card: PlayingCard = None, n_cards: int = 0):
+    def __discard(self, card: "PlayingCard" = None, n_cards: int = 0):
         """
         Discard either a single `PlayingCard`, or a number, N, `PlayingCard`s,
         from the `CardShoe`, but not both. Where `n_cards == -1`, any
@@ -107,7 +105,7 @@ class CardDealer(CardPlayer):
 
     def discard(self,
                 player: CardPlayer = None,
-                cards: List[PlayingCard] = [],
+                cards: List["PlayingCard"] = [],
                 n_cards: int = 0):
         """
         Discard `PlayingCard`s from the `CardShoe` in three distinct ways.

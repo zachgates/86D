@@ -3,19 +3,18 @@ import random
 from dataclasses import field
 from typing import List, Optional
 
-from .. import gameclass, GameObject
-from . import PlayingCard, CardSet, CardDeck
+from .. import GameObject
+from . import CardSet, CardDeck
 
 
-@gameclass
 class CardShoe(CardSet):
     """
     A device used to hold multiple decks of cards typically 4, 6 or 8.
     Cards are dealt one at a time from the shoe.
     """
 
-    cards: List[PlayingCard] = field(default_factory=list)
-    discards: List[PlayingCard] = field(default_factory=list)
+    cards: List["PlayingCard"] = field(default_factory=list)
+    discards: List["PlayingCard"] = field(default_factory=list)
 
     def load(self, n_decks: int = 0) -> None:
         """
@@ -43,7 +42,7 @@ class CardShoe(CardSet):
         for _ in range(n_repeat): # Repeat shuffle any, N, times.
             random.shuffle(self.cards)
 
-    def draw(self) -> Optional[PlayingCard]:
+    def draw(self) -> Optional["PlayingCard"]:
         """
         Draw any number, N, `PlayingCard`s from the `CardShoe`.
         """
@@ -53,7 +52,7 @@ class CardShoe(CardSet):
         else:
             return self.cards.pop() # Draw a PlayingCard.
 
-    def discard(self, card: PlayingCard) -> None:
+    def discard(self, card: "PlayingCard") -> None:
         """
         Discard a `PlayingCard` handed to `CardDealer`.
         """
