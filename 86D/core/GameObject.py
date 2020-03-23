@@ -6,70 +6,55 @@ class _GameObject(type):
     A metaclass which assigns a logger to each `GameObject`.
     """
 
+    _count = 0
+    _id = hex(_count)
+
     def __new__(cls, name, bases, dct):
         """
         Add a `Logger` to any `GameObject` type.
         """
         dct.update({
             '__hash__': _GameObject.__hash__,
-            '__eq__': _GameObject.__eq__
+            '__eq__': _GameObject.__eq__,
+            '__repr__': _GameObject.__repr__,
         })
-        cls = super().__new__(cls, name, bases, dct)
+        cls = type.__new__(cls, name, bases, dct)
+        cls = dataclass(cls)
         cls.log = LOG.getChild(name)
-        cls.count = 0
-        return dataclass(repr=False, eq=False)(cls)
+        return cls
+
+    def __call__(cls, *args, **kwargs):
+        _GameObject._count += 1
+        self = type.__call__(cls, *args, **kwargs)
+        self._id = hex(_GameObject._count)
+        self.log = LOG.getChild(repr(self))
+        if APP.SETTINGS.LOG_TRACK:
+            self.log.debug('generated.')
+        return self
 
     def __hash__(self):
-        """
-        Default hashing logic.
-        """
-        return hash((self.__class__, self.count))
+        return int(self._id, 16)
 
     def __eq__(self, other):
-        """
-        Default equality test compares `hash` values.
-        """
         return hash(self) == hash(other)
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, self._id)
 
 
 class GameObject(object, metaclass=_GameObject):
 
-    def __new__(cls, *args, **kwargs):
-        """
-        Increase the object count upon creation of a new `GameObject`.
-        """
-        self = super().__new__(cls)
-        self.count = cls.count
-        self.log = LOG.getChild(repr(self))
-        if APP.SETTINGS.LOG_TRACK:
-            self.log.debug('generated.')
-        cls.count += 1
-        return self
-
-    def __repr__(self):
-        """
-        Default `repr` logic; i.e. `PlayingCard(0)` represents the first
-        generated `PlayingCard`.
-        """
-        return '%s(%i)' % (self.__class__.__name__, self.count)
-
     def __str__(self):
-        """
-        Default `str` logic points to `repr`.
-        """
         return repr(self)
 
     def _assert(self, cond, msg, warn=False):
-        """
-        Helper function for logging warnings and errors.
-        """
         try:
             assert cond, msg
         except AssertionError as e:
             if warn:
-                self.log.warning(e, stack_info=APP.SETTINGS.LOG_TRACE)
+                self.log.warning(e, stack_info=SETTINGS.LOG_TRACE)
             else:
-                self.log.error(e, stack_info=APP.SETTINGS.LOG_TRACE)
+                self.log.error(e, stack_info=SETTINGS.LOG_TRACE)
                 raise e
 
 

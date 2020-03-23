@@ -13,7 +13,7 @@ class _settings(object):
 
     LOG_FNAME: str = None
     LOG_LEVEL: str = 'INFO'
-    LOG_STYLE: str = '[%(levelname)8s] | %(name)-25s: %(message)s'
+    LOG_STYLE: str = '[%(levelname)8s] | %(name)-30s: %(message)s'
     LOG_TRACE: bool = False
     LOG_QUIET: bool = False
     LOG_CACHE: bool = False

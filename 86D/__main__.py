@@ -37,6 +37,9 @@ class _(object):
         b1 = t.gather_bet(p1, 513)
         b2 = t.gather_bet(p2, 201)
         t.game.play()
+        # print(p1.hand(0) is p2.hand(0))
+        # p1.hand(0).up = p2.hand(0).up = True
+        print(t.dealer.hand(0), '|', p1.hand(0), p2.hand(0))
         t.remove_player(p1)
         t.remove_player(p2)
 
