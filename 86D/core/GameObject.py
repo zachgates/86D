@@ -7,7 +7,6 @@ class _GameObject(type):
     """
 
     _count = 0
-    _id = hex(_count)
 
     def __new__(cls, name, bases, dct):
         """
@@ -44,6 +43,8 @@ class _GameObject(type):
 
 class GameObject(object, metaclass=_GameObject):
 
+    _id = hex(0)
+
     def __str__(self):
         return repr(self)
 
@@ -52,9 +53,9 @@ class GameObject(object, metaclass=_GameObject):
             assert cond, msg
         except AssertionError as e:
             if warn:
-                self.log.warning(e, stack_info=SETTINGS.LOG_TRACE)
+                self.log.warning(e, stack_info=APP.SETTINGS.LOG_TRACE)
             else:
-                self.log.error(e, stack_info=SETTINGS.LOG_TRACE)
+                self.log.error(e, stack_info=APP.SETTINGS.LOG_TRACE)
                 raise e
 
 

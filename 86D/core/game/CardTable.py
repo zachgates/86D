@@ -9,9 +9,9 @@ class CardTable(GameObject):
 
     MaxPlayers = 7 # "the usual 'full table'"
     MinPlayers = 2
+    GameType = CardGame
+    DealerType = CardDealer
 
-    game_type: type
-    dealer_type: type
     waiting: List["CardPlayer"] = field(default_factory=list)
 
     def __post_init__(self):
@@ -21,14 +21,14 @@ class CardTable(GameObject):
         # Create the CardShoe.
         self.shoe = CardShoe()
         # Create the CardDealer.
-        self._assert(issubclass(self.dealer_type, CardDealer),
+        self._assert(issubclass(self.DealerType, CardDealer),
                     'dealer_type must be CardDealer or subclass.')
-        dealer = self.dealer_type()
+        dealer = self.DealerType()
         dealer.table = self
         # Create the CardGame.
-        self._assert(issubclass(self.game_type, CardGame),
+        self._assert(issubclass(self.GameType, CardGame),
                     'game_type must be subclass of CardGame.')
-        self.game = self.game_type(dealer)
+        self.game = self.GameType(dealer)
         self.log.info('generated %r with %r.' % (self.game, dealer))
 
     @property

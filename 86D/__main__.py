@@ -27,11 +27,11 @@ class _(object):
         LOG.info('starting.')
 
     def run(self):
-        from .core import CardTable, CardPlayer
-        from .play.blackjack import BlackjackGame, BlackjackDealer
+        from .core import CardPlayer
+        from .play.blackjack import BlackjackTable
         p1 = CardPlayer(funds=5000)
         p2 = CardPlayer(funds=5000)
-        t = CardTable(BlackjackGame, BlackjackDealer)
+        t = BlackjackTable()
         t.add_player(p1)
         t.add_player(p2)
         b1 = t.gather_bet(p1, 513)
