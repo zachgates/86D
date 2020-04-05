@@ -1,7 +1,6 @@
 from typing import List
 
 from .. import CardSet
-from . import CardPlayer
 
 
 class CardHand(CardSet):
@@ -9,7 +8,7 @@ class CardHand(CardSet):
     A dataclass representing a single `CardHand` of `PlayingCard`s.
     """
 
-    player: CardPlayer
+    player: "CardPlayer"
     bet: int = 0
 
     def add(self, card: "PlayingCard"):

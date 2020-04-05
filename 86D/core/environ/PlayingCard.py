@@ -12,10 +12,10 @@ class PlayingCard(GameObject):
     RankNames = ['ace', 'two', 'three', 'four', 'five', 'six', 'seven',
                  'eight', 'nine', 'ten', 'jack', 'queen', 'king']
 
-    rank: int # Indicates the PlayingCard's rank, range(13)
-    suit: int # Indicates the PlayingCard's suit, range(4)
-    deck: "CardDeck" = None # Points to the PlayingCard's CardDeck
-    hand: "CardHand" = None # Points to the (optional) PlayingCard's CardHand
+    rank: int
+    suit: int
+    deck: "CardDeck" = None
+    hand: "CardHand" = None
     up: bool = False # Indicates an "upcard" (face-up)
 
     def __eq__(self, other):

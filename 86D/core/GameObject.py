@@ -23,6 +23,7 @@ class _GameObject(type):
         return cls
 
     def __call__(cls, *args, **kwargs):
+        # TODO: Convert to use __init_subclass__ ?
         _GameObject._count += 1
         self = type.__call__(cls, *args, **kwargs)
         self._id = hex(_GameObject._count)

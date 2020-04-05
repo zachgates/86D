@@ -43,9 +43,6 @@ class CardShoe(CardSet):
             random.shuffle(self.cards)
 
     def draw(self) -> Optional["PlayingCard"]:
-        """
-        Draw any number, N, `PlayingCard`s from the `CardShoe`.
-        """
         if self.empty:
             self._assert(False, 'the CardShoe is empty.', warn=True)
             return None
